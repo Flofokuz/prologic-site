@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prologic Strategies</title>
+<meta name="description" content="Prologic Strategies is a Bronx-based network for community development and business strategy. Find your floor. Choose your path. Build something that outlives you.">
+<meta property="og:title" content="Prologic Strategies">
+<meta property="og:description" content="Find your floor. Choose your path. Build something that outlives you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one centered column; hero line, then what's live, what's coming, the five questions, and contact. Prologic suite palette: ink, gold, ember. */
+  --ink:#121417;
+  --panel:#1b1e23;
+  --line:#2c3038;
+  --text:#ece8df;
+  --muted:#a9a59c;
+  --gold:#d9a441;
+  --ember:#d4572a;
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ink);color:var(--text);font:17px/1.6 var(--font-body)}
+a{color:var(--gold)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-weight:700;letter-spacing:.06em;font-size:1.05rem}
+.brand span{color:var(--gold)}
+.top small{color:var(--muted)}
+.hero{padding:64px 0 44px}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.1rem,6vw,3.4rem);line-height:1.08;margin:0 0 18px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{max-width:60ch;color:var(--muted);margin:0 0 26px;font-size:1.1rem}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--gold)}
+.btn.solid{background:var(--gold);color:var(--ink)}
+.btn.ghost{color:var(--gold)}
+section{padding:36px 0;border-top:1px solid var(--line)}
+h2{font-family:var(--font-display);font-size:1.7rem;margin:0 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 20px;max-width:62ch}
+.next{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--ember);border-radius:12px;padding:16px 18px;display:grid;gap:4px}
+.next b{font-variant-numeric:tabular-nums}
+.next .when{color:var(--ember);font-weight:600;font-size:.9rem;letter-spacing:.04em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:8px;align-content:start}
+.card h3{margin:0;font-size:1.1rem}
+.card p{margin:0;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;justify-self:start}
+.tag.live{background:rgba(217,164,65,.15);color:var(--gold)}
+.tag.soon{background:rgba(212,87,42,.14);color:var(--ember)}
+.realms{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.realms li{display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.realms b{font-family:var(--font-display);color:var(--gold);font-size:1.15rem}
+.realms span{color:var(--text)}
+.contact{display:grid;gap:12px;max-width:520px}
+.contact .row{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.contact .row small{display:block;color:var(--muted);font-size:.85rem}
+.contact .row a,.contact .row strong{font-size:1.1rem;font-weight:600;font-variant-numeric:tabular-nums}
+footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+@media (max-width:520px){ .realms li{grid-template-columns:1fr;gap:2px} }
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">PROLOGIC <span>STRATEGIES</span></div>
+    <small>Bronx, New York</small>
+  </header>
+
+  <div class="hero">
+    <h1>Find your floor. Choose your path. <em>Build something that outlives you.</em></h1>
+    <p>Prologic Strategies is a Bronx-based network for community development and business strategy. We help anyone, from any starting point, get from the idea to the dinner plate, with the receipts to prove it.</p>
+    <div class="btns">
+      <a class="btn solid" href="#contact">Stay in the loop</a>
+      <a class="btn ghost" href="https://youtube.com/playlist?list=PLm0_IP2xF3VaD_bKAubNlrRkJ6dVQIbje">Watch the podcast</a>
+    </div>
+  </div>
+
+  <section aria-labelledby="h-next">
+    <h2 id="h-next">Next up</h2>
+    <p class="lead">Come through, or catch it here afterward.</p>
+    <div class="next">
+      <span class="when">Sunday, November 8, 2026</span>
+      <b>Grown Folk Talkn quarterly event · YMCA, Newark, NJ</b>
+      <span>Prince Taylor speaks on dis-ease prevention: why most of it starts at the floor, not the body.</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-live">
+    <h2 id="h-live">Live now</h2>
+    <p class="lead">What you can tap into today.</p>
+    <div class="grid">
+      <div class="card">
+        <span class="tag live">Live</span>
+        <h3>Xtra Hype Connection</h3>
+        <p>Our call-in podcast on the Grown Folk Talkn network. Bite-Sized on Mondays and Cooler Talk on Fridays, both at 6pm.</p>
+        <a href="https://youtube.com/playlist?list=PLm0_IP2xF3VaD_bKAubNlrRkJ6dVQIbje">Watch the episodes</a>
+      </div>
+      <div class="card">
+        <span class="tag live">Live</span>
+        <h3>FloFokuz on YouTube</h3>
+        <p>Talks, music and commentary from Prince Taylor, also known as Flofokuz.</p>
+        <a href="https://www.youtube.com/@FloFokuz">Subscribe</a>
+      </div>
+      <div class="card">
+        <span class="tag live">Booking</span>
+        <h3>Strategy services</h3>
+        <p>Business strategy advisory, talent and career coaching, and small business systems setup.</p>
+        <a href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-soon">
+    <h2 id="h-soon">Coming soon</h2>
+    <p class="lead">Being built in the open. Join the list to hear first.</p>
+    <div class="grid">
+      <div class="card">
+        <span class="tag soon">In progress</span>
+        <h3>The Prologic Codex</h3>
+        <p>88 strategies for building your floor and your future, taught at every level from kids to career changers.</p>
+      </div>
+      <div class="card">
+        <span class="tag soon">In progress</span>
+        <h3>The Prologic tool suite</h3>
+        <p>Free tools for planning, vetting partners and tracking your progress, with free membership first.</p>
+      </div>
+      <div class="card">
+        <span class="tag soon">In progress</span>
+        <h3>Network programs</h3>
+        <p>Partner programs across the Bronx and beyond, with one calendar for everything happening in the network.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-realms">
+    <h2 id="h-realms">Five questions we start with</h2>
+    <p class="lead">Run them on a job, a relationship, a business or a whole block. Then go around again.</p>
+    <ul class="realms">
+      <li><b>Earth</b><span>What are you standing on? What's actually solid?</span></li>
+      <li><b>Water</b><span>Why? What is this for?</span></li>
+      <li><b>Air</b><span>Who's looking at this with you? Get outside eyes.</span></li>
+      <li><b>Fire</b><span>When? What's the fuel, and what do you need to cut?</span></li>
+      <li><b>Void</b><span>Who are you becoming, and what do you need to let go of?</span></li>
+    </ul>
+  </section>
+
+  <section id="contact" aria-labelledby="h-contact">
+    <h2 id="h-contact">Stay in the loop</h2>
+    <p class="lead">Send your name and what you're working on, and we'll keep you posted on what drops next.</p>
+    <div class="contact">
+      <div class="row">
+        <small>Email</small>
+        <a href="mailto:prologicstrategies@gmail.com?subject=Keep%20me%20in%20the%20loop">prologicstrategies@gmail.com</a>
+      </div>
+      <div class="row">
+        <small>Call or text</small>
+        <strong>(347) 541-8581</strong>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 Prologic Strategies LLC · Bronx, NY</footer>
+</div>
+</body>
+</html>
