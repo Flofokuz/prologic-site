@@ -215,7 +215,71 @@ footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px sol
       <a href="https://discord.gg/RtC2KvDru">Discord</a>
     </div>
   </section>
-
+<!-- PULL UP FORM: paste this whole block right above the <footer> line -->
+<section id="pullup" aria-labelledby="h-pullup">
+<style>
+.pu-form{display:grid;gap:14px;max-width:620px}
+.pu-form label{display:grid;gap:6px;font-weight:600}
+.pu-form input[type=text],.pu-form select,.pu-form textarea{font:inherit;color:inherit;background:var(--panel,#1b1e23);border:1px solid var(--line,#2c3038);border-radius:10px;padding:14px;font-size:17px;width:100%;box-sizing:border-box}
+.pu-form textarea{min-height:120px;resize:vertical}
+.pu-form fieldset{border:1px solid var(--line,#2c3038);border-radius:12px;padding:12px 14px;margin:0;display:grid;gap:4px}
+.pu-form legend{font-weight:600;padding:0 6px}
+.pu-check{display:flex!important;grid-template-columns:none;align-items:center;gap:12px;font-weight:400!important;padding:8px 0;min-height:32px}
+.pu-check input{width:24px;height:24px;flex:none;accent-color:var(--gold,#d9a441)}
+.pu-note{color:var(--muted,#a9a59c);font-size:.92rem;margin:0}
+.pu-send{font:inherit;font-weight:700;font-size:1.1rem;background:var(--gold,#d9a441);color:var(--ink,#121417);border:0;border-radius:12px;padding:16px 20px;cursor:pointer}
+.pu-hp{position:absolute;left:-9999px}
+#thanks{display:none;background:var(--panel,#1b1e23);border:1px solid var(--line,#2c3038);border-left:4px solid var(--gold,#d9a441);border-radius:12px;padding:18px;margin-bottom:18px}
+#thanks:target{display:block}
+#thanks a{display:inline-block;margin-top:10px;font-weight:700}
+</style>
+<div id="thanks" role="status">
+<strong>Got it. Thank you for pulling up.</strong>
+<p class="pu-note">We read every one of these, and we'll reach out the way you asked.</p>
+<a href="#pullup" onclick="document.getElementById('pu-form').reset()">Next person &rarr;</a>
+</div>
+<h2 id="h-pullup">Pull up. Sound off.</h2>
+<p class="lead">Share your story, your project, or what you need. It takes about a minute.</p>
+<form id="pu-form" class="pu-form" action="https://formsubmit.co/prologicstrategies@gmail.com" method="POST">
+<input type="hidden" name="_subject" value="New sound-off from prologicstrategies.com">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_next" value="https://prologicstrategies.com/#thanks">
+<input type="text" name="_honey" class="pu-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+<label>Your name<input type="text" name="Name" required autocomplete="name"></label>
+<label>Best way to reach you (email or phone)<input type="text" name="Contact" required></label>
+<fieldset>
+<legend>What brings you here? Pick any.</legend>
+<label class="pu-check"><input type="checkbox" name="Share my story" value="Yes">Share my story</label>
+<label class="pu-check"><input type="checkbox" name="Share a project or business" value="Yes">Share a project or business</label>
+<label class="pu-check"><input type="checkbox" name="Wants to get involved" value="Yes">I want to get involved</label>
+<label class="pu-check"><input type="checkbox" name="Knows someone in need" value="Yes">I know someone who needs help</label>
+<label class="pu-check"><input type="checkbox" name="Knows a service to refer" value="Yes">I know a service we should send people to</label>
+<label class="pu-check"><input type="checkbox" name="Mailing list" value="Yes">Keep me in the loop (mailing list)</label>
+</fieldset>
+<label>How do you want to be involved?
+<select name="Involvement">
+<option value="">Choose one (optional)</option>
+<option>Volunteer at events</option>
+<option>Partner my org or business</option>
+<option>Teach or share a skill</option>
+<option>Spread the word</option>
+<option>I need help myself</option>
+<option>Not sure yet</option>
+</select></label>
+<label>Tell us more: your story, project, the service, or what's needed
+<textarea name="Message"></textarea></label>
+<p class="pu-note">Telling us about someone else? Only include their contact info if they said it's OK.</p>
+<fieldset>
+<legend>Your say</legend>
+<label class="pu-check"><input type="checkbox" name="OK to contact" value="Yes" required>It's OK to contact me about this</label>
+<label class="pu-check"><input type="checkbox" name="OK to share story" value="Yes">You can share my story (you'll ask me before using my name)</label>
+</fieldset>
+<button type="submit" class="pu-send">Send it</button>
+<p class="pu-note">Rather talk? Call or text (347) 541-8581.</p>
+</form>
+</section>
+<!-- END PULL UP FORM -->
   <footer>© 2026 Prologic Strategies LLC · Bronx, NY</footer>
 </div>
 </body>
