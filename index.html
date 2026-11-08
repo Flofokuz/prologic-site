@@ -229,6 +229,12 @@ footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px sol
 .pu-note{color:var(--muted,#a9a59c);font-size:.92rem;margin:0}
 .pu-send{font:inherit;font-weight:700;font-size:1.1rem;background:var(--gold,#d9a441);color:var(--ink,#121417);border:0;border-radius:12px;padding:16px 20px;cursor:pointer}
 .pu-hp{position:absolute;left:-9999px}
+.pu-contact{border:2px solid var(--gold,#d9a441)!important;background:rgba(217,164,65,.06)}
+.pu-contact legend{color:var(--gold,#d9a441);font-size:1.05rem}
+.pu-row{display:grid;gap:6px;padding:4px 0 8px}
+.pu-row input[type=email],.pu-row input[type=tel]{font:inherit;color:inherit;background:var(--panel,#1b1e23);border:1px solid var(--line,#2c3038);border-radius:10px;padding:14px;font-size:17px;width:100%;box-sizing:border-box}
+.pu-row input:disabled{opacity:.35}
+.pu-err{color:#ff8a6a;font-weight:600;margin:0}
 #thanks{display:none;background:var(--panel,#1b1e23);border:1px solid var(--line,#2c3038);border-left:4px solid var(--gold,#d9a441);border-radius:12px;padding:18px;margin-bottom:18px}
 #thanks:target{display:block}
 #thanks a{display:inline-block;margin-top:10px;font-weight:700}
@@ -243,11 +249,21 @@ footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px sol
 <form id="pu-form" class="pu-form" action="https://formsubmit.co/prologicstrategies@gmail.com" method="POST">
 <input type="hidden" name="_subject" value="New sound-off from prologicstrategies.com">
 <input type="hidden" name="_template" value="table">
-<input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="_next" value="https://prologicstrategies.com/#thanks">
 <input type="text" name="_honey" class="pu-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 <label>Your name<input type="text" name="Name" required autocomplete="name"></label>
-<label>Best way to reach you (email or phone)<input type="text" name="Contact" required></label>
+<fieldset class="pu-contact">
+<legend>How should we reach you? Pick at least one.</legend>
+<div class="pu-row">
+<label class="pu-check"><input type="checkbox" id="pu-use-email">Email me</label>
+<input type="email" name="email" id="pu-email" placeholder="you@email.com" autocomplete="email" disabled aria-label="Email address">
+</div>
+<div class="pu-row">
+<label class="pu-check"><input type="checkbox" id="pu-use-phone">Call or text me</label>
+<input type="tel" name="Phone" id="pu-phone" placeholder="(718) 555-0123" autocomplete="tel" disabled aria-label="Phone number">
+</div>
+<p id="pu-contact-err" class="pu-err" role="alert" hidden>Check at least one box and fill it in so we can reach you.</p>
+</fieldset>
 <fieldset>
 <legend>What brings you here? Pick any.</legend>
 <label class="pu-check"><input type="checkbox" name="Share my story" value="Yes">Share my story</label>
@@ -278,6 +294,24 @@ footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px sol
 <button type="submit" class="pu-send">Send it</button>
 <p class="pu-note">Rather talk? Call or text (347) 541-8581.</p>
 </form>
+<script>
+(function(){
+var f=document.getElementById('pu-form');if(!f)return;
+var t0=Date.now(),err=document.getElementById('pu-contact-err');
+var pairs=[['pu-use-email','pu-email'],['pu-use-phone','pu-phone']].map(function(p){return[document.getElementById(p[0]),document.getElementById(p[1])];});
+var phone=document.getElementById('pu-phone');
+function sync(){pairs.forEach(function(p){p[1].disabled=!p[0].checked;p[1].required=p[0].checked;if(!p[0].checked){p[1].value='';p[1].setCustomValidity('');}});}
+pairs.forEach(function(p){p[0].addEventListener('change',function(){sync();err.hidden=true;if(p[0].checked)p[1].focus();});});
+phone.addEventListener('input',function(){var d=phone.value.replace(/\D/g,'');phone.setCustomValidity(d.length>=10?'':'Enter the full number with area code.');});
+f.addEventListener('submit',function(e){
+var ok=pairs.some(function(p){return p[0].checked&&p[1].value.trim();});
+if(!ok){e.preventDefault();err.hidden=false;err.scrollIntoView({block:'center'});return;}
+if(Date.now()-t0<3000){e.preventDefault();}
+});
+f.addEventListener('reset',function(){setTimeout(function(){sync();err.hidden=true;t0=Date.now();},0);});
+sync();
+})();
+</script>
 </section>
 <!-- END PULL UP FORM -->
   <footer>© 2026 Prologic Strategies LLC · Bronx, NY</footer>
