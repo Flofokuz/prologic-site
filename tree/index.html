@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T.R.E.E. — Tactical Recovery Entrepreneur Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F4EC; --panel:#FFFFFF; --ink:#232321; --ink-soft:#5B584F;
+    --green:#1F5C3F; --green-soft:#E7EFE9; --gold:#B8862E; --gold-soft:#F5EBD8;
+    --rust:#8C3D2B; --rust-soft:#F3E4DF; --amber:#B8862E; --line:#DDD8C9; --cell:#FBFAF5;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;}
+  .wrap{max-width:1280px;margin:0 auto;padding:36px 28px 64px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:34px;margin:6px 0 6px;color:var(--ink);}
+  .sub{color:var(--ink-soft);font-size:14.5px;max-width:700px;line-height:1.5;margin-bottom:26px;}
+
+  /* Event Bar */
+  .event-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 20px;margin-bottom:20px;}
+  .event-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .event-select, .event-input{font-family:'IBM Plex Mono',monospace;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--cell);color:var(--ink);}
+  .btn{font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 12px;cursor:pointer;color:var(--ink);}
+  .btn:hover{background:var(--green-soft);}
+  .btn-danger{color:var(--rust);}
+  .btn-danger:hover{background:var(--rust-soft);}
+
+  .summary{position:sticky;top:12px;z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:30px;box-shadow:0 4px 18px rgba(35,35,33,.06);}
+  .summary-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+  @media(max-width:980px){.summary-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:560px){.summary-grid{grid-template-columns:repeat(2,1fr);}}
+  .s-metric .m-label{font-size:11px;color:var(--ink-soft);margin-bottom:3px;}
+  .s-metric .m-val{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;color:var(--green);}
+  .s-metric.warn .m-val{color:var(--rust);}
+  .status-bar{margin-top:14px;height:10px;border-radius:6px;background:var(--rust-soft);position:relative;overflow:hidden;}
+  .status-fill{height:100%;background:var(--green);width:0%;transition:width .15s ease;}
+  .status-text{font-size:12px;color:var(--ink-soft);margin-top:6px;font-family:'IBM Plex Mono',monospace;}
+
+  .module-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px;}
+  .toggle-chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:7px 14px 7px 10px;font-size:13px;cursor:pointer;user-select:none;}
+  .toggle-chip input{accent-color:var(--green);}
+  .toggle-chip.off{opacity:.45;}
+
+  .module{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:22px;}
+  .module h2{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin:0 0 4px;display:flex;align-items:center;gap:8px;}
+  .module .modnum{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold);}
+  .module .hint{font-size:13px;color:var(--ink-soft);margin:0 0 18px;line-height:1.5;max-width:680px;}
+
+  .module-body{display:grid;grid-template-columns:1.1fr 1fr;gap:26px;}
+  @media(max-width:900px){.module-body{grid-template-columns:1fr;}}
+
+  .sheet{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .sheet-row{display:grid;grid-template-columns:1fr 130px;align-items:center;border-bottom:1px solid var(--line);}
+  .sheet-row:last-child{border-bottom:none;}
+  .sheet-row:nth-child(odd){background:#FCFBF7;}
+  .sheet-label{padding:10px 14px;font-size:13px;color:var(--ink-soft);}
+  .cell-wrap{display:flex;align-items:center;border-left:1px solid var(--line);background:var(--cell);}
+  .cell-unit{padding:0 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);}
+  .num-input{width:100%;border:none;background:transparent;font-family:'IBM Plex Mono',monospace;font-size:13.5px;text-align:right;padding:10px 10px 10px 0;color:var(--ink);}
+  .num-input:focus{outline:2px solid var(--green);outline-offset:-2px;background:#fff;}
+
+  .visuals{display:flex;flex-direction:column;gap:14px;}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+  .metric{background:var(--green-soft);border-radius:10px;padding:11px 13px;}
+  .metric.warn{background:var(--rust-soft);}
+  .metric.gold{background:var(--gold-soft);}
+  .metric .m-label{font-size:11px;color:var(--ink-soft);margin-bottom:3px;}
+  .metric .m-val{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:var(--green);}
+  .metric.warn .m-val{color:var(--rust);}
+  .metric.gold .m-val{color:#8a641f;}
+  .chartbox{position:relative;height:190px;}
+  .chartbox.small{height:150px;}
+  .gauge-wrap{background:#FCFBF7;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .gauge-label{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-bottom:6px;}
+  .gauge-track{height:10px;border-radius:6px;background:var(--rust-soft);overflow:hidden;}
+  .gauge-fill{height:100%;border-radius:6px;transition:width .15s ease;}
+
+  .hidden{display:none !important;}
+  .foot-note{font-size:12px;color:var(--ink-soft);margin-top:16px;line-height:1.6;border-top:1px solid var(--line);padding-top:14px;}
+  .action-bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  @media print{ nav, .module-toggles, .action-bar, .event-bar{display:none;} .summary{position:static;} }
+</style>
+<script>
+/* Site version: saves export files straight to the device. */
+(function(){
+  window.claude = window.claude || {};
+  if (window.claude.use) return;
+  window.claude.use = async function(name){
+    if (name !== 'downloads') return null;
+    return { save: async function(o){ var b = new Blob([o.data], {type: 'application/json'}); var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = o.filename || 'download.json'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000); } };
+  };
+})();
+</script>
+</head>
+<body>
+<nav style="background:#121417;padding:10px 20px;font:600 13px/1.4 system-ui,-apple-system,sans-serif;display:flex;gap:18px;align-items:center;flex-wrap:wrap;position:relative;z-index:50"><a href="/" style="color:#d9a441;text-decoration:none;letter-spacing:.06em">PROLOGIC STRATEGIES</a><a href="/#tools" style="color:#ece8df;text-decoration:none">Tools</a><a href="/#pullup" style="color:#ece8df;text-decoration:none">Pull up</a></nav>
+<div class="wrap">
+
+  <div class="eyebrow">T.R.E.E. — Tactical Recovery Entrepreneur Engine</div>
+  <h1>Type it in. Watch it recalculate.</h1>
+  <p class="sub">Every field is a typed number, two decimal places, no snapping. Auto-saves locally for long-term tracking across multi-event operations.</p>
+
+  <div class="event-bar">
+    <div class="event-controls">
+      <label for="eventSelect" style="font-size:13px;font-weight:500;">Active Event:</label>
+      <select id="eventSelect" class="event-select"></select>
+      <button class="btn" id="btnNewEvent">+ New Event</button>
+      <button class="btn btn-danger" id="btnDeleteEvent">Delete Current</button>
+    </div>
+    <div class="event-controls">
+      <button class="btn" id="btnExport">Export All Data (.json)</button>
+      <button class="btn" id="btnImport">Import Data</button>
+      <input type="file" id="fileImport" accept=".json" class="hidden">
+    </div>
+  </div>
+
+  <div class="module-toggles" id="toggles"></div>
+
+  <div class="summary">
+    <div class="summary-grid">
+      <div class="s-metric"><div class="m-label">Total spend</div><div class="m-val" id="sCost">$0.00</div></div>
+      <div class="s-metric" id="sGapCard"><div class="m-label">Gap to recover</div><div class="m-val" id="sGap">$0.00</div></div>
+      <div class="s-metric gold"><div class="m-label">Units needed</div><div class="m-val" id="sUnits">0</div></div>
+      <div class="s-metric" id="sNetCard"><div class="m-label">Net after event</div><div class="m-val" id="sNet">$0.00</div></div>
+      <div class="s-metric"><div class="m-label">Profit margin</div><div class="m-val" id="sMargin">0.00%</div></div>
+      <div class="s-metric"><div class="m-label">ROI on spend</div><div class="m-val" id="sROI">0.00%</div></div>
+    </div>
+    <div class="status-bar"><div class="status-fill" id="statusFill"></div></div>
+    <div class="status-text" id="statusText">Enter your numbers below to start.</div>
+  </div>
+
+  <div class="module" data-mod="cost">
+    <h2><span class="modnum">01</span> Booth cost & the funding gap</h2>
+    <p class="hint">Exact spend, against what the organizer's funding proposal was actually supposed to cover.</p>
+    <div class="module-body">
+      <div class="sheet">
+        <div class="sheet-row"><div class="sheet-label">Table / booth fee</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="booth" value="150.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Inventory / product cost</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="inv" value="300.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Travel & lodging</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="travel" value="100.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Staff / your time</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="staff" value="150.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Print / signage / misc</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="print" value="75.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Organizer's promised contribution</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="org" value="100.00"></div></div>
+      </div>
+      <div class="visuals">
+        <div class="metrics">
+          <div class="metric"><div class="m-label">Total spend</div><div class="m-val" id="mCost">$0.00</div></div>
+          <div class="metric warn"><div class="m-label">Net exposure (gap)</div><div class="m-val" id="mGap">$0.00</div></div>
+        </div>
+        <div class="chartbox small"><canvas id="costDonut" role="img" aria-label="Donut chart showing the share of total spend from each cost category"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" data-mod="breakeven">
+    <h2><span class="modnum">02</span> On-site break-even</h2>
+    <p class="hint">What it actually takes to close the gap by selling at the table.</p>
+    <div class="module-body">
+      <div class="sheet">
+        <div class="sheet-row"><div class="sheet-label">Average sale price / commission</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="sale" value="25.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Promised foot traffic</div><div class="cell-wrap"><input class="num-input" type="number" step="1" min="0" id="promTraffic" value="200"><span class="cell-unit">ppl</span></div></div>
+      </div>
+      <div class="visuals">
+        <div class="metrics">
+          <div class="metric gold"><div class="m-label">Units needed to close gap</div><div class="m-val" id="mUnits">0</div></div>
+          <div class="metric gold"><div class="m-label">Sell-through of promised traffic</div><div class="m-val" id="mSellThru">0.00%</div></div>
+        </div>
+        <div class="gauge-wrap">
+          <div class="gauge-label"><span>Sell-through required</span><span id="gaugeLabel">0.00%</span></div>
+          <div class="gauge-track"><div class="gauge-fill" id="gaugeFill" style="width:0%;background:var(--green);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" data-mod="live">
+    <h2><span class="modnum">03</span> Live day-of tracker</h2>
+    <p class="hint">Check in during the event. If you're behind pace, that's your signal to push marketing harder before the room empties out.</p>
+    <div class="module-body">
+      <div class="sheet">
+        <div class="sheet-row"><div class="sheet-label">Event time elapsed</div><div class="cell-wrap"><input class="num-input" type="number" step="0.01" min="0" max="100" id="elapsed" value="50.00"><span class="cell-unit">%</span></div></div>
+        <div class="sheet-row"><div class="sheet-label">Actual foot traffic so far</div><div class="cell-wrap"><input class="num-input" type="number" step="1" min="0" id="actTraffic" value="80"><span class="cell-unit">ppl</span></div></div>
+        <div class="sheet-row"><div class="sheet-label">Units sold so far</div><div class="cell-wrap"><input class="num-input" type="number" step="0.01" min="0" id="sold" value="6"><span class="cell-unit">u</span></div></div>
+      </div>
+      <div class="visuals">
+        <div class="metrics">
+          <div class="metric"><div class="m-label">Pace status</div><div class="m-val" id="mPace" style="font-size:14px;">—</div></div>
+          <div class="metric warn"><div class="m-label">Units still needed</div><div class="m-val" id="mRemaining">0</div></div>
+        </div>
+        <div class="chartbox"><canvas id="paceChart" role="img" aria-label="Line chart comparing target sales pace to actual units sold across the event timeline"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" data-mod="followup">
+    <h2><span class="modnum">04</span> Follow-up recovery</h2>
+    <p class="hint">Leads captured at the table converting after the fact, if you actually follow up.</p>
+    <div class="module-body">
+      <div class="sheet">
+        <div class="sheet-row"><div class="sheet-label">Leads / contacts captured</div><div class="cell-wrap"><input class="num-input" type="number" step="1" min="0" id="leads" value="40"><span class="cell-unit">ppl</span></div></div>
+        <div class="sheet-row"><div class="sheet-label">Post-event conversion rate</div><div class="cell-wrap"><input class="num-input" type="number" step="0.01" min="0" max="100" id="fuConv" value="10.00"><span class="cell-unit">%</span></div></div>
+      </div>
+      <div class="visuals">
+        <div class="metrics">
+          <div class="metric"><div class="m-label">Additional units, post-event</div><div class="m-val" id="mFuUnits">0</div></div>
+          <div class="metric"><div class="m-label">Additional revenue recovered</div><div class="m-val" id="mFuRev">$0.00</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" data-mod="ecosystem">
+    <h2><span class="modnum">05</span> Network tap-in (optional)</h2>
+    <p class="hint">Modeled as a separate, slower revenue line — never confused with recovering your table costs above.</p>
+    <div class="module-body">
+      <div class="sheet">
+        <div class="sheet-row"><div class="sheet-label">Leads who tap into network</div><div class="cell-wrap"><input class="num-input" type="number" step="0.01" min="0" max="100" id="netConv" value="8.00"><span class="cell-unit">%</span></div></div>
+        <div class="sheet-row"><div class="sheet-label">Membership price / mo</div><div class="cell-wrap"><span class="cell-unit">$</span><input class="num-input" type="number" step="0.01" min="0" id="netPrice" value="25.00"></div></div>
+        <div class="sheet-row"><div class="sheet-label">Avg. months retained</div><div class="cell-wrap"><input class="num-input" type="number" step="0.1" min="0" id="netRet" value="4.0"><span class="cell-unit">mo</span></div></div>
+      </div>
+      <div class="visuals">
+        <div class="metrics">
+          <div class="metric"><div class="m-label">New members from event</div><div class="m-val" id="mNetMembers">0</div></div>
+          <div class="metric"><div class="m-label">Projected network revenue</div><div class="m-val" id="mNetRev">$0.00</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" data-mod="stack">
+    <h2><span class="modnum">06</span> Recovery breakdown</h2>
+    <p class="hint">Every active revenue line, stacked against the gap it's trying to close — this is the whole picture in one chart.</p>
+    <div class="chartbox" style="height:220px;"><canvas id="stackChart" role="img" aria-label="Bar chart showing on-site, follow-up, and network revenue stacked against the recovery gap"></canvas></div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn" onclick="window.print()">Print / save summary as PDF</button>
+  </div>
+  <div class="foot-note">All figures auto-save to browser storage. Switch or export events above for long-term historical tracking.</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const fmt$ = (v) => (v<0?'-$':'$') + Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtPct = (v) => (isFinite(v)?v:0).toFixed(2)+'%';
+
+const modDefs = [
+  {key:'cost', label:'Booth cost & gap', required:true},
+  {key:'breakeven', label:'Break-even', required:true},
+  {key:'live', label:'Live tracker', required:false},
+  {key:'followup', label:'Follow-up recovery', required:false},
+  {key:'ecosystem', label:'Network tap-in', required:false},
+];
+let modState = {cost:true, breakeven:true, live:true, followup:true, ecosystem:true};
+
+const ids = ['booth','inv','travel','staff','print','org','sale','promTraffic','elapsed','actTraffic','sold','leads','fuConv','netConv','netPrice','netRet'];
+const el = {}; ids.forEach(id => el[id] = document.getElementById(id));
+const num = (id) => { const v = parseFloat(el[id].value); return isNaN(v) ? 0 : v; };
+
+let paceChart, costDonut, stackChart;
+
+// Storage Keys & State
+const STORAGE_KEY = 'tree_app_data';
+let appData = {
+  activeId: 'default',
+  events: {
+    'default': { name: 'Default Event', inputs: {}, modState: {...modState} }
+  }
+};
+
+function loadStorage() {
+  let saved=null; try{ saved = localStorage.getItem(STORAGE_KEY); }catch(e){}
+  if(saved) {
+    try { appData = JSON.parse(saved); } catch(e){ console.error("Invalid state", e); }
+  }
+  renderEventOptions();
+  loadActiveEvent();
+}
+
+function saveStorage() {
+  const currentInputs = {};
+  ids.forEach(id => { currentInputs[id] = el[id].value; });
+  if(!appData.events[appData.activeId]) {
+    appData.events[appData.activeId] = { name: 'Event ' + Date.now(), inputs: {}, modState: {} };
+  }
+  appData.events[appData.activeId].inputs = currentInputs;
+  appData.events[appData.activeId].modState = {...modState};
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }catch(e){}
+}
+
+function renderEventOptions() {
+  const sel = document.getElementById('eventSelect');
+  sel.innerHTML = '';
+  Object.keys(appData.events).forEach(id => {
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = appData.events[id].name;
+    if(id === appData.activeId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function loadActiveEvent() {
+  const ev = appData.events[appData.activeId];
+  if(!ev) return;
+
+  if(ev.inputs) {
+    ids.forEach(id => {
+      if(ev.inputs[id] !== undefined) el[id].value = ev.inputs[id];
+    });
+  }
+  if(ev.modState) {
+    modState = {...ev.modState};
+    modDefs.forEach(m => {
+      const isChecked = modState[m.key] !== false;
+      document.querySelector(`.module[data-mod="${m.key}"]`).classList.toggle('hidden', !isChecked);
+      const chipInput = document.querySelector(`.toggle-chip[data-key="${m.key}"] input`);
+      if(chipInput) chipInput.checked = isChecked;
+      const chip = document.querySelector(`.toggle-chip[data-key="${m.key}"]`);
+      if(chip) chip.classList.toggle('off', !isChecked);
+    });
+  }
+  compute();
+}
+
+const togglesEl = document.getElementById('toggles');
+modDefs.forEach(m => {
+  const chip = document.createElement('label');
+  chip.className = 'toggle-chip';
+  chip.setAttribute('data-key', m.key);
+  chip.innerHTML = `<input type="checkbox" ${modState[m.key]?'checked':''} ${m.required?'disabled':''}> ${m.label}`;
+  chip.querySelector('input').addEventListener('change', (e)=>{
+    modState[m.key] = e.target.checked;
+    document.querySelector(`.module[data-mod="${m.key}"]`).classList.toggle('hidden', !e.target.checked);
+    chip.classList.toggle('off', !e.target.checked);
+    compute();
+    saveStorage();
+  });
+  togglesEl.appendChild(chip);
+});
+
+function compute(){
+  const booth=num('booth'), inv=num('inv'), travel=num('travel'), staff=num('staff'), print=num('print'), org=num('org');
+  const totalCost = booth+inv+travel+staff+print;
+  const gap = Math.max(0, totalCost - org);
+
+  document.getElementById('mCost').textContent = fmt$(totalCost);
+  document.getElementById('mGap').textContent = fmt$(gap);
+
+  const costCtx = document.getElementById('costDonut');
+  const costData = [booth,inv,travel,staff,print];
+  const costLabels = ['Booth fee','Inventory','Travel','Staff','Print/misc'];
+  if(costDonut){ costDonut.data.datasets[0].data = costData; costDonut.update('none'); }
+  else if(costCtx){
+    costDonut = new Chart(costCtx, {
+      type:'doughnut',
+      data:{ labels: costLabels, datasets:[{ data: costData, backgroundColor:['#1F5C3F','#B8862E','#7FA593','#8C3D2B','#C9C2AC'], borderColor:'#fff', borderWidth:2 }] },
+      options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+        plugins:{ legend:{ position:'right', labels:{ boxWidth:10, font:{size:10.5}, color:'#5B584F' } },
+          tooltip:{ callbacks:{ label:(c)=> c.label+': '+fmt$(c.parsed) } } } }
+    });
+  }
+
+  const sale = num('sale'), promTraffic = num('promTraffic');
+  const unitsNeeded = sale>0 ? Math.ceil(gap/sale*100)/100 : (gap>0 ? Infinity : 0);
+  const sellThru = (promTraffic>0 && isFinite(unitsNeeded)) ? (unitsNeeded/promTraffic*100) : (isFinite(unitsNeeded)?0:100);
+  document.getElementById('mUnits').textContent = isFinite(unitsNeeded) ? unitsNeeded.toFixed(2) : 'N/A — no unit price set';
+  document.getElementById('mSellThru').textContent = isFinite(unitsNeeded) ? fmtPct(sellThru) : 'N/A';
+  const gaugePct = Math.min(100, sellThru);
+  document.getElementById('gaugeFill').style.width = (isFinite(unitsNeeded)?gaugePct:100)+'%';
+  document.getElementById('gaugeFill').style.background = gaugePct<20 ? 'var(--green)' : gaugePct<50 ? 'var(--amber)' : 'var(--rust)';
+  document.getElementById('gaugeLabel').textContent = isFinite(unitsNeeded) ? fmtPct(sellThru) : 'Not sellable on-site';
+
+  const elapsed = num('elapsed'), actTraffic = num('actTraffic'), sold = num('sold');
+  const targetPace = isFinite(unitsNeeded) ? unitsNeeded*(elapsed/100) : 0;
+  const remaining = isFinite(unitsNeeded) ? Math.max(0, unitsNeeded-sold) : 0;
+  document.getElementById('mRemaining').textContent = remaining.toFixed(2);
+  const paceEl = document.getElementById('mPace');
+  if(!isFinite(unitsNeeded)){ paceEl.textContent='No on-site sale price set'; paceEl.style.color='var(--ink-soft)'; }
+  else if(sold>=targetPace){ paceEl.textContent='On pace'; paceEl.style.color='var(--green)'; }
+  else { paceEl.textContent='Behind — push marketing'; paceEl.style.color='var(--rust)'; }
+
+  const points = [];
+  for(let t=0;t<=100;t+=10){ points.push({t, target: isFinite(unitsNeeded) ? unitsNeeded*(t/100) : 0}); }
+  const paceCtx = document.getElementById('paceChart');
+  if(paceChart){
+    paceChart.data.labels = points.map(p=>p.t+'%');
+    paceChart.data.datasets[0].data = points.map(p=>p.target);
+    paceChart.data.datasets[1].data = points.map((p,i)=> i===Math.round(elapsed/10) ? sold : null);
+    paceChart.update('none');
+  } else if(paceCtx){
+    paceChart = new Chart(paceCtx, {
+      type:'line',
+      data:{ labels: points.map(p=>p.t+'%'), datasets:[
+        { label:'Target pace', data: points.map(p=>p.target), borderColor:'#B8862E', borderWidth:2, pointRadius:0, tension:.2 },
+        { label:'Actual sold', data: points.map((p,i)=> i===Math.round(elapsed/10) ? sold : null), borderColor:'#1F5C3F', backgroundColor:'#1F5C3F', pointRadius:6, showLine:false }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:true, position:'top', labels:{boxWidth:10,font:{size:11},color:'#5B584F'}} },
+        scales:{
+          x:{ title:{display:true,text:'Event elapsed',color:'#5B584F',font:{size:11}}, grid:{display:false}, ticks:{color:'#5B584F',font:{size:10}} },
+          y:{ title:{display:true,text:'Units sold',color:'#5B584F',font:{size:11}}, grid:{color:'#E4E0D3'}, ticks:{color:'#5B584F',font:{size:10}} }
+        } }
+    });
+  }
+
+  const leads = num('leads'), fuConv = num('fuConv')/100;
+  const fuUnits = leads*fuConv;
+  const fuRev = isFinite(unitsNeeded) ? fuUnits*sale : 0;
+  document.getElementById('mFuUnits').textContent = fuUnits.toFixed(2);
+  document.getElementById('mFuRev').textContent = fmt$(fuRev);
+
+  const netConv = num('netConv')/100, netPrice = num('netPrice'), netRet = num('netRet');
+  const netMembers = leads*netConv;
+  const netRev = netMembers*netPrice*netRet;
+  document.getElementById('mNetMembers').textContent = netMembers.toFixed(2);
+  document.getElementById('mNetRev').textContent = fmt$(netRev);
+
+  const onSiteRevenue = isFinite(unitsNeeded) ? sold*sale : 0;
+  const followupRevenue = modState.followup ? fuRev : 0;
+  const netRevenueTotal = modState.ecosystem ? netRev : 0;
+  const revenueTotal = onSiteRevenue + followupRevenue + org;
+  const netAfter = onSiteRevenue + followupRevenue - totalCost + org;
+  const profitMargin = revenueTotal>0 ? (netAfter/revenueTotal*100) : 0;
+  const roi = totalCost>0 ? (netAfter/totalCost*100) : 0;
+
+  document.getElementById('sCost').textContent = fmt$(totalCost);
+  document.getElementById('sGap').textContent = fmt$(gap);
+  document.getElementById('sGapCard').className = 's-metric ' + (gap>0?'warn':'');
+  document.getElementById('sUnits').textContent = isFinite(unitsNeeded) ? (modState.live ? remaining.toFixed(2) : unitsNeeded.toFixed(2)) : 'N/A';
+  document.getElementById('sNet').textContent = fmt$(netAfter);
+  document.getElementById('sNetCard').className = 's-metric ' + (netAfter>=0?'':'warn');
+  document.getElementById('sMargin').textContent = fmtPct(profitMargin);
+  document.getElementById('sROI').textContent = fmtPct(roi);
+
+  const pct = isFinite(unitsNeeded) && unitsNeeded>0 ? Math.min(100, (sold/unitsNeeded)*100) : (gap<=0?100:0);
+  document.getElementById('statusFill').style.width = pct+'%';
+  document.getElementById('statusFill').style.background = pct>=100 ? 'var(--green)' : 'var(--rust)';
+  document.getElementById('statusText').textContent = isFinite(unitsNeeded)
+    ? (modState.live ? `${sold.toFixed(2)} of ${unitsNeeded.toFixed(2)} units sold, ${elapsed.toFixed(2)}% through the event` : `${unitsNeeded.toFixed(2)} units needed to close a ${fmt$(gap)} gap`)
+    : `No on-site sale price set — gap must close through follow-up and network modules`;
+
+  const stackCtx = document.getElementById('stackChart');
+  const stackLabels = ['On-site sales','Follow-up','Network tap-in','Gap to close'];
+  const stackData = [onSiteRevenue, followupRevenue, netRevenueTotal, gap];
+  const stackColors = ['#1F5C3F','#7FA593','#B8862E','#8C3D2B'];
+  if(stackChart){ stackChart.data.datasets[0].data = stackData; stackChart.update('none'); }
+  else if(stackCtx){
+    stackChart = new Chart(stackCtx, {
+      type:'bar',
+      data:{ labels: stackLabels, datasets:[{ data: stackData, backgroundColor: stackColors, borderRadius:5, maxBarThickness:60 }] },
+      options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+        plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:(c)=> fmt$(c.parsed.x) } } },
+        scales:{
+          x:{ title:{display:true,text:'Dollars',color:'#5B584F',font:{size:11}}, grid:{color:'#E4E0D3'}, ticks:{color:'#5B584F',font:{size:10}, callback:(v)=>fmt$(v)} },
+          y:{ grid:{display:false}, ticks:{color:'#5B584F',font:{size:11}} }
+        } }
+    });
+  }
+}
+
+// Input Handlers & Auto-Save
+ids.forEach(id => el[id] && el[id].addEventListener('input', () => {
+  compute();
+  saveStorage();
+}));
+
+// Event Management Event Listeners
+document.getElementById('eventSelect').addEventListener('change', (e) => {
+  saveStorage();
+  appData.activeId = e.target.value;
+  loadActiveEvent();
+  saveStorage();
+});
+
+document.getElementById('btnNewEvent').addEventListener('click', () => {
+  let name=null; try{ name = prompt('Enter a name for the new event:', 'New Event'); }catch(e){}
+  if(name===null){ name = 'Event ' + (Object.keys(appData.events).length+1); }
+  if(!name) return;
+  saveStorage();
+  const newId = 'event_' + Date.now();
+  appData.events[newId] = { name: name, inputs: {}, modState: {...modState} };
+  appData.activeId = newId;
+  renderEventOptions();
+  loadActiveEvent();
+  saveStorage();
+});
+
+document.getElementById('btnDeleteEvent').addEventListener('click', () => {
+  const keys = Object.keys(appData.events);
+  if(keys.length <= 1) {
+    alert('Cannot delete the only remaining event profile.');
+    return;
+  }
+  if(confirm(`Are you sure you want to delete "${appData.events[appData.activeId].name}"?`)) {
+    delete appData.events[appData.activeId];
+    appData.activeId = Object.keys(appData.events)[0];
+    renderEventOptions();
+    loadActiveEvent();
+    saveStorage();
+  }
+});
+
+// Import/Export Handlers
+document.getElementById('btnExport').addEventListener('click', () => {
+  saveStorage();
+  const filename = `tree_app_backup_${new Date().toISOString().slice(0,10)}.json`;
+  const data = JSON.stringify(appData, null, 2);
+  (async () => {
+    const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+    if (!dl) { try { alert('Export is not available in this view.'); } catch(e){} return; }
+    try { await dl.save({ filename, data }); } catch(e) {}
+  })();
+});
+
+document.getElementById('btnImport').addEventListener('click', () => {
+  document.getElementById('fileImport').click();
+});
+
+document.getElementById('fileImport').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const imported = JSON.parse(event.target.result);
+      if(imported && imported.events && imported.activeId) {
+        appData = imported;
+        saveStorage();
+        renderEventOptions();
+        loadActiveEvent();
+        alert('Events successfully imported!');
+      } else {
+        alert('Invalid data structure in uploaded file.');
+      }
+    } catch(err) {
+      alert('Failed to parse JSON file.');
+    }
+  };
+  reader.readAsText(file);
+});
+
+// Init
+loadStorage();
+</script>
+</body>
+</html>
