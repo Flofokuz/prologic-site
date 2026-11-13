@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FloUp Lead Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one narrow column for a phone in one hand on the street. Counts up top, callbacks by urgency, each card logs its own calls. */
+  --bg:#f2f3f0;
+  --surface:#ffffff;
+  --ink:#16181b;
+  --muted:#5b616a;
+  --line:#d8dbd4;
+  --accent:#1f4fd1;
+  --accent-ink:#ffffff;
+  --due:#b45309;
+  --late:#b42318;
+  --good:#18794e;
+  --font-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --font-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111317; --surface:#1a1d22; --ink:#eef0f2; --muted:#a3a9b2; --line:#2e323a;
+    --accent:#86a2ff; --accent-ink:#0c1022; --due:#f3a65f; --late:#ff8c7c; --good:#62d49c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111317; --surface:#1a1d22; --ink:#eef0f2; --muted:#a3a9b2; --line:#2e323a;
+  --accent:#86a2ff; --accent-ink:#0c1022; --due:#f3a65f; --late:#ff8c7c; --good:#62d49c;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 var(--font-body)}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 72px;display:grid;gap:16px}
+header{display:grid;gap:12px}
+h1{font-family:var(--font-display);font-weight:700;font-size:2.1rem;line-height:1;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.chip b{display:block;font-family:var(--font-display);font-size:1.7rem;line-height:1.05;font-variant-numeric:tabular-nums}
+.chip span{font-size:.8rem;color:var(--muted);font-weight:600}
+.chip.late b{color:var(--late)}
+.chip.due b{color:var(--due)}
+.chip.good b{color:var(--good)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:600 1rem var(--font-body);color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.view{display:grid;gap:18px}
+.view[hidden]{display:none}
+.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:13px 16px;font:600 1rem var(--font-body);cursor:pointer;width:100%}
+.primary:disabled{opacity:.5;cursor:default}
+.btn{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font:500 .95rem var(--font-body);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.btn.good{border-color:var(--good);color:var(--good)}
+.btn.warn{border-color:var(--late);color:var(--late)}
+.btn.accent{border-color:var(--accent);color:var(--accent);font-weight:600}
+.btn:disabled{opacity:.5;cursor:default}
+.btn[hidden],.primary[hidden]{display:none}
+.btn.sm{padding:6px 10px;font-size:.88rem}
+form.panel,.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px}
+form.panel[hidden]{display:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+label.f{display:grid;gap:4px;font-size:.85rem;color:var(--muted);font-weight:600}
+input,select,textarea{font:16px var(--font-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;width:100%}
+textarea{resize:vertical;min-height:64px}
+.form-actions{display:flex;gap:8px;flex-wrap:wrap}
+.form-actions .primary{width:auto;flex:1}
+.conflict{border:1px solid var(--due);border-radius:8px;padding:8px 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0}
+.conflict[hidden]{display:none}
+section h2,.h2{font-family:var(--font-display);font-weight:700;font-size:1.3rem;margin:0 0 8px;display:flex;gap:8px;align-items:baseline}
+section h2 .n{color:var(--muted);font-size:1rem;font-variant-numeric:tabular-nums}
+.list{display:grid;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:8px}
+.card.age-aging{opacity:.88}
+.card.age-stale{opacity:.68;filter:grayscale(.6)}
+.card.s-cooling{border-left-color:var(--muted);border-left-style:dashed}
+.pill.aging{border-color:var(--due);color:var(--due)}
+.pill.hot{border-color:var(--late);color:var(--late)}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.card.s-overdue{border-left-color:var(--late)}
+.card.s-today{border-left-color:var(--due)}
+.card.s-upcoming{border-left-color:var(--accent)}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.namebtn{appearance:none;background:none;border:0;padding:0;margin:0;font:600 1.1rem var(--font-body);color:var(--ink);text-align:left;cursor:pointer;overflow-wrap:anywhere}
+.namebtn::after{content:" ▾";color:var(--muted);font-size:.85rem}
+.namebtn[aria-expanded="true"]::after{content:" ▴"}
+.when{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.s-overdue .when{color:var(--late)}
+.s-today .when{color:var(--due)}
+.card p{margin:0;overflow-wrap:anywhere}
+.phonebtn{appearance:none;background:none;border:0;padding:0;font:600 1rem var(--font-body);color:var(--accent);font-variant-numeric:tabular-nums;cursor:pointer;text-align:left}
+.meta{color:var(--muted);font-size:.9rem}
+.pill{display:inline-block;font-size:.78rem;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pill.sold{border-color:var(--good);color:var(--good)}
+.board{display:flex;gap:8px;align-items:center;font-size:.9rem;color:var(--muted)}
+.board input{width:auto}
+.actions{display:flex;flex-wrap:wrap;gap:6px}
+.loglabel{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.detail{border-top:1px solid var(--line);padding-top:8px;display:grid;gap:8px}
+.detail[hidden]{display:none}
+.history{display:grid;gap:4px;margin:0;padding:0;list-style:none;font-size:.9rem}
+.history li{display:flex;gap:8px;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0}
+.history li:last-child{border-bottom:0}
+.history .t{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.empty{color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:12px;margin:0}
+.banner{background:var(--surface);border:1px solid var(--due);border-radius:10px;padding:10px 12px;margin:0}
+.banner[hidden]{display:none}
+details summary{cursor:pointer;font-family:var(--font-display);font-weight:700;font-size:1.3rem}
+details .list{margin-top:8px}
+.table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.92rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:.8rem}
+tr:last-child td{border-bottom:0}
+tfoot td{font-weight:600}
+.small{font-size:.85rem;color:var(--muted);margin:0}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.toast[hidden]{display:none}
+.counter{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bigtap{appearance:none;border:0;border-radius:18px;min-height:46vh;display:grid;place-content:center;gap:6px;cursor:pointer;font-family:var(--font-display);color:var(--accent-ink);touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.bigtap b{font-size:4.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.bigtap span{font-size:1.5rem;font-weight:700;letter-spacing:.02em}
+.bigtap.stops{background:var(--accent)}
+.view#view-counter .counter .bigtap{min-height:36vh}
+.bigtap.convos{background:var(--good)}
+.bigtap.passed{background:var(--muted)}
+.bigtap:active{filter:brightness(.88)}
+.undo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.linkrow{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.linkrow input{width:22px;height:22px;flex:none}
+.leadcount{display:flex;justify-content:space-between;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.leadcount b{font-family:var(--font-display);font-size:1.8rem;font-variant-numeric:tabular-nums}
+.snap{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.snap b{font-variant-numeric:tabular-nums}
+@media (max-width:400px){
+  .chips{grid-template-columns:repeat(2,1fr)}
+  .row2,.row3{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script>
+/* Site version: FloUp saves to this device's browser storage. */
+(function(){
+  if (window.claude && window.claude.use) return;
+  var PFX = 'floup-db:', subs = {};
+  function load(c){ try { return JSON.parse(localStorage.getItem(PFX + c) || '{}'); } catch (e) { return {}; } }
+  function save(c, m){ try { localStorage.setItem(PFX + c, JSON.stringify(m)); } catch (e) { var err = new Error('full'); err.code = 'resource_exhausted'; throw err; } }
+  function snap(c){ var m = load(c); return { docs: Object.keys(m).map(function(id){ return { id: id, exists: true, data: function(){ return m[id]; } }; }), metadata: { fromCache: false } }; }
+  function notify(c){ (subs[c] || []).forEach(function(cb){ try { cb(snap(c)); } catch (e) {} }); }
+  function newId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+  var db = { collection: function(c){ return {
+    doc: function(id){ id = id || newId(); return { id: id,
+      set: function(body){ var m = load(c); m[id] = JSON.parse(JSON.stringify(body)); save(c, m); setTimeout(function(){ notify(c); }, 0); return Promise.resolve(); },
+      delete: function(){ var m = load(c); delete m[id]; save(c, m); setTimeout(function(){ notify(c); }, 0); return Promise.resolve(); } }; },
+    onSnapshot: function(cb){ (subs[c] = subs[c] || []).push(cb); setTimeout(function(){ cb(snap(c)); }, 0); return function(){ subs[c] = (subs[c] || []).filter(function(f){ return f !== cb; }); }; }
+  }; } };
+  window.addEventListener('storage', function(e){ if (e.key && e.key.indexOf(PFX) === 0) notify(e.key.slice(PFX.length)); });
+  window.claude = { use: async function(name){ return name === 'db' ? db : null; } };
+})();
+</script>
+</head>
+<body>
+<nav style="background:#121417;padding:10px 20px;font:600 13px/1.4 system-ui,-apple-system,sans-serif;display:flex;gap:18px;align-items:center;flex-wrap:wrap;position:relative;z-index:50"><a href="/" style="color:#d9a441;text-decoration:none;letter-spacing:.06em">PROLOGIC STRATEGIES</a><a href="/#tools" style="color:#ece8df;text-decoration:none">Tools</a><a href="/#pullup" style="color:#ece8df;text-decoration:none">Pull up</a></nav>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>FloUp <span style="color:var(--muted);font-weight:600">Lead Ledger</span></h1>
+      <p class="sub" id="today-line">Your follow-ups and daily numbers</p>
+    </div>
+    <div class="chips" aria-label="Callback counts">
+      <div class="chip late"><b id="c-overdue">0</b><span>Overdue</span></div>
+      <div class="chip due"><b id="c-today">0</b><span>Due today</span></div>
+      <div class="chip"><b id="c-calls">0</b><span>Calls today</span></div>
+      <div class="chip good"><b id="c-sold">0</b><span>Sold</span></div>
+    </div>
+    <p class="banner" id="banner" hidden></p>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-followups" data-view="followups" aria-selected="true">Follow-ups</button>
+      <button class="tab" role="tab" id="tab-counter" data-view="counter" aria-selected="false">Counter</button>
+      <button class="tab" role="tab" id="tab-tally" data-view="tally" aria-selected="false">Daily numbers</button>
+      <button class="tab" role="tab" id="tab-backups" data-view="backups" aria-selected="false">Backups</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="view" id="view-followups">
+      <button class="primary" id="open-form" type="button">+ Add a follow-up</button>
+      <form class="panel" id="f-form" hidden>
+        <label class="f" for="f-name">Name
+          <input id="f-name" autocomplete="off" required placeholder="Who you talked to">
+        </label>
+        <div class="row2">
+          <label class="f" for="f-phone">Phone
+            <input id="f-phone" type="tel" autocomplete="off" placeholder="(718) 555-0123">
+          </label>
+          <label class="f" for="f-source">Where you met them
+            <input id="f-source" autocomplete="off" placeholder="Parkchester, door, call">
+          </label>
+        </div>
+        <div class="row2">
+          <label class="f" for="f-date">Call back on
+            <input id="f-date" type="date">
+          </label>
+          <label class="f" for="f-time">Time
+            <input id="f-time" type="time" step="900">
+          </label>
+        </div>
+        <p class="conflict" id="f-conflict" hidden></p>
+        <div class="actions">
+          <button class="btn sm" type="button" id="f-slot">Use next 10am / 5pm slot</button>
+        </div>
+        <label class="f" for="f-note">Notes
+          <textarea id="f-note" placeholder="Who decides, what they want, what to say next"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="primary" type="submit" id="f-save">Save follow-up</button>
+          <button class="btn" type="button" id="f-cancel">Cancel</button>
+        </div>
+      </form>
+
+      <section aria-labelledby="h-overdue"><h2 id="h-overdue">Overdue <span class="n" id="n-overdue"></span></h2><div class="list" id="l-overdue"></div></section>
+      <section aria-labelledby="h-today"><h2 id="h-today">Today <span class="n" id="n-today"></span></h2><div class="list" id="l-today"></div></section>
+      <section aria-labelledby="h-upcoming"><h2 id="h-upcoming">Coming up <span class="n" id="n-upcoming"></span></h2><div class="list" id="l-upcoming"></div></section>
+      <details id="cooling-wrap"><summary>Cooling <span class="n" id="n-cooling"></span></summary><p class="small" style="margin:6px 0 0">Leads resting so you don't over-call them. Each one comes back on its own on the date shown.</p><div class="list" id="l-cooling"></div></details>
+      <details id="closed-wrap"><summary>Closed <span class="n" id="n-closed"></span></summary><div class="list" id="l-closed"></div></details>
+    </div>
+
+    <div class="view" id="view-counter" hidden>
+      <button class="bigtap passed" type="button" id="k-passed" aria-label="Add an approach" style="min-height:16vh;width:100%"><b id="k-passed-n" style="font-size:2.6rem">0</b><span>APPROACHED</span></button>
+      <div class="counter">
+        <button class="bigtap stops" type="button" id="k-stops" aria-label="Add a stop"><b id="k-stops-n">0</b><span>STOP</span></button>
+        <button class="bigtap convos" type="button" id="k-convos" aria-label="Add a conversation"><b id="k-convos-n">0</b><span>CONVO</span></button>
+      </div>
+      <div class="undo" style="grid-template-columns:1fr 1fr 1fr">
+        <button class="btn" type="button" id="k-passed-undo">Undo approach</button>
+        <button class="btn" type="button" id="k-stops-undo">Undo stop</button>
+        <button class="btn" type="button" id="k-convos-undo">Undo convo</button>
+      </div>
+      <div class="leadcount"><span>Leads added today</span><b id="k-leads-n">0</b></div>
+      <label class="linkrow" for="k-link"><input type="checkbox" id="k-link"> <span><b>Link counts:</b> each tap adds one to every step before it. A stop also counts an approach, a convo also counts a stop and an approach, and a new lead counts all three.</span></label>
+      <p class="small" id="k-rate">Approached = everyone you try. Stop = answered or gave one objection. Convo = kept talking past that.</p>
+      <button class="primary" type="button" id="k-send">Put today's counts in Daily numbers</button>
+    </div>
+
+    <div class="view" id="view-tally" hidden>
+      <form class="panel" id="t-form">
+        <div class="row2">
+          <label class="f" for="t-date">Day
+            <input id="t-date" type="date">
+          </label>
+          <label class="f" for="t-spot">Spot
+            <input id="t-spot" autocomplete="off" placeholder="Parkchester, Simpson, doors">
+          </label>
+        </div>
+        <div class="row3">
+          <label class="f" for="t-doors">Approached
+            <input id="t-doors" type="number" min="0" inputmode="numeric" placeholder="0">
+          </label>
+          <label class="f" for="t-opened">Stopped / spoke
+            <input id="t-opened" type="number" min="0" inputmode="numeric" placeholder="0">
+          </label>
+          <label class="f" for="t-convos">Real convos
+            <input id="t-convos" type="number" min="0" inputmode="numeric" placeholder="0">
+          </label>
+        </div>
+        <p class="small">Approached = everyone you tried, walk-bys included. Stopped = answered you or gave one objection. Real convo = kept talking past that. Leads = names you added. Each number includes the ones after it.</p>
+        <div class="row2">
+          <label class="f" for="t-names">Leads
+            <input id="t-names" type="number" min="0" inputmode="numeric" placeholder="0">
+          </label>
+          <label class="f" for="t-sales">Sales
+            <input id="t-sales" type="number" min="0" inputmode="numeric" placeholder="0">
+          </label>
+        </div>
+        <label class="f" for="t-notes">What worked (voice, opener, block)
+          <textarea id="t-notes" placeholder="Free TV opener stopped more people. Crosswalk at the light worked."></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="primary" type="submit" id="t-save">Log these numbers</button>
+          <button class="btn" type="button" id="t-cancel" hidden>Cancel edit</button>
+        </div>
+      </form>
+
+      <div class="panel">
+        <h2 class="h2">Tonight's text to Vic</h2>
+        <textarea id="vic-text" readonly aria-label="Message for Vic"></textarea>
+        <div class="form-actions">
+          <button class="primary" type="button" id="vic-copy">Copy message</button>
+        </div>
+        <p class="small" id="vic-status">Built from today's numbers and the calls you logged.</p>
+      </div>
+
+      <section aria-labelledby="h-week">
+        <h2 id="h-week">Last 7 days</h2>
+        <div id="week"></div>
+      </section>
+    </div>
+
+    <div class="view" id="view-backups" hidden>
+      <div class="panel">
+        <h2 class="h2">Save a backup</h2>
+        <p class="small">A backup copies every follow-up, call and daily number, named by the date and time you save it. Add a passphrase to lock it. A lost passphrase can't be recovered, so pick one you'll remember.</p>
+        <label class="f" for="b-pass">Passphrase (optional to save, needed to restore a locked backup)
+          <input id="b-pass" type="password" autocomplete="off">
+        </label>
+        <button class="primary" type="button" id="b-save">Save backup now</button>
+      </div>
+      <section aria-labelledby="h-snaps">
+        <h2 id="h-snaps">Saved backups <span class="n" id="n-snaps"></span></h2>
+        <div class="list" id="l-snaps"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+  "use strict";
+  var SLOT=15, ANCHORS=[600,1020];
+  var AGING_DAYS=4, STALE_DAYS=11, COOL_AFTER=4, COOL_DAYS=7, DAILY_CAP=2;
+  var REACHED={callback:1,sold:1,notint:1};
+  var DISP={noanswer:"No answer",voicemail:"Left voicemail",callback:"Talked, call back",notint:"Not interested",sold:"Sold",wrong:"Wrong number"};
+  var state={db:null,offline:false,followups:[],tally:[],calls:[],snapshots:[],loaded:{followups:false,tally:false,calls:false,snapshots:false,counters:false},editingId:null,notes:{},expanded:{},pending:null,callNotes:{},counters:[],counterLocal:null};
+  var busy={};
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function ymd(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function today(){ return ymd(new Date()); }
+  function parse(s){ var p=String(s).split("-").map(Number); return new Date(p[0],p[1]-1,p[2]); }
+  function addDays(s,n){ var d=parse(s); d.setDate(d.getDate()+n); return ymd(d); }
+  function niceDate(s){ if(!s) return ""; return parse(s).toLocaleDateString(undefined,{weekday:"short",month:"numeric",day:"numeric"}); }
+  function niceTime(t){ if(!t) return ""; var p=t.split(":").map(Number); var h=p[0],m=p[1]||0; var ap=h>=12?"pm":"am"; return (((h+11)%12)+1)+(m?":"+pad(m):"")+ap; }
+  function stamp(ms){ var d=new Date(ms); return d.toLocaleDateString(undefined,{weekday:"short",month:"numeric",day:"numeric"})+" "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}); }
+  function num(v){ var n=parseInt(v,10); return isNaN(n)||n<0?0:n; }
+  function str(v){ return typeof v==="string"?v:""; }
+  function toMin(t){ var p=String(t).split(":").map(Number); return p[0]*60+(p[1]||0); }
+  function fromMin(m){ return pad(Math.floor(m/60))+":"+pad(m%60); }
+  function isOpen(f){ return !f.status||f.status==="open"; }
+  function holdsSlot(f){ return isOpen(f)||f.status==="cooling"; }
+  function ageDays(f){ var c=f.createdAt||f.updatedAt||Date.now(); return Math.max(0,Math.floor((Date.now()-c)/86400000)); }
+
+  var toastTimer=null;
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.hidden=true; },2600); }
+
+  // ---------- Slots: 15-minute callbacks, no double booking ----------
+  function conflict(date,time,excludeId){
+    if(!date||!time) return null;
+    var m=toMin(time);
+    return state.followups.find(function(f){ return f.id!==excludeId && holdsSlot(f) && f.date===date && f.time && Math.abs(toMin(f.time)-m)<SLOT; })||null;
+  }
+  function nextFreeFrom(date,time,excludeId){
+    var m=toMin(time);
+    for(var i=0;i<24;i++){ var mm=m+i*SLOT; if(mm>1425) break; var t=fromMin(mm); if(!conflict(date,t,excludeId)) return {date:date,time:t}; }
+    return null;
+  }
+  function nextAnchorSlot(excludeId,startDay){
+    var now=new Date(), nowMin=now.getHours()*60+now.getMinutes(), base=today();
+    for(var day=startDay||0;day<21;day++){
+      var date=addDays(base,day);
+      for(var a=0;a<ANCHORS.length;a++){
+        for(var off=0;off<60;off+=SLOT){
+          var m=ANCHORS[a]+off;
+          if(day===0 && m<=nowMin+5) continue;
+          var t=fromMin(m);
+          if(!conflict(date,t,excludeId)) return {date:date,time:t};
+        }
+      }
+    }
+    return {date:addDays(base,1),time:"10:00"};
+  }
+  function slotLabel(s){ return (s.date===today()?"Today":niceDate(s.date))+" "+niceTime(s.time); }
+
+  function bucket(f){
+    if(f.status==="cooling"){ if((f.date||"")>today()) return "cooling"; }
+    else if(!isOpen(f)) return "closed";
+    var d=f.date||today(), t=today();
+    if(d<t) return "overdue";
+    if(d===t) return "today";
+    return "upcoming";
+  }
+  function sortKey(f){ return (f.date||"")+" "+(f.time||"99:99"); }
+
+  function calLink(f){
+    var d=(f.date||today()).replace(/-/g,""), dates;
+    if(f.time){ var m=toMin(f.time), e=Math.min(m+SLOT,1439); dates=d+"T"+fromMin(m).replace(":","")+"00/"+d+"T"+fromMin(e).replace(":","")+"00"; }
+    else { dates=d+"/"+addDays(f.date||today(),1).replace(/-/g,""); }
+    var details=[str(f.note), f.phone?("Phone: "+f.phone):""].filter(Boolean).join("\n");
+    return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent("Call back "+(f.name||"lead"))+"&dates="+dates+"&ctz=America/New_York&details="+encodeURIComponent(details);
+  }
+
+  function unreachedStreak(id){ var n=0, cs=callsFor(id); for(var i=0;i<cs.length;i++){ if(REACHED[cs[i].disposition]) break; n++; } return n; }
+  function triesToday(id){ var t=today(); return callsFor(id).filter(function(c){ return ymd(new Date(c.at))===t; }).length; }
+  function callsFor(id){ return state.calls.filter(function(c){ return c.leadId===id; }).sort(function(a,b){ return (b.at||0)-(a.at||0); }); }
+
+  function setBanner(){
+    var msgs=[];
+    if(state.offline) msgs.push("Saving is off in this view, so anything you add here disappears when you close it. Open FloUp from your artifacts on claude.ai while signed in.");
+    Object.keys(state.notes).forEach(function(k){ if(state.notes[k]) msgs.push(state.notes[k]); });
+    var b=$("banner"); if(msgs.length){ b.textContent=msgs.join(" "); b.hidden=false; } else b.hidden=true;
+  }
+
+  function cardHTML(f,b){
+    var when = b==="closed" ? "" : (b==="today" ? (f.time?niceTime(f.time):"Today") : niceDate(f.date)+(f.time?" · "+niceTime(f.time):""));
+    var calls=callsFor(f.id), open=!!state.expanded[f.id], age=ageDays(f), streak=unreachedStreak(f.id), tToday=triesToday(f.id);
+    var ageCls=b==="closed"?"":(age>=STALE_DAYS?" age-stale":(age>=AGING_DAYS?" age-aging":""));
+    var h='<article class="card s-'+b+ageCls+'" data-id="'+esc(f.id)+'">';
+    h+='<div class="card-top"><button class="namebtn" type="button" data-act="expand" aria-expanded="'+open+'">'+esc(f.name||"(no name)")+'</button>';
+    if(b==="cooling"){
+      h+='<span class="when">Back '+esc(niceDate(f.date))+'</span>';
+    } else if(b==="closed"){
+      var label=f.status==="sold"?"Sold":(f.status==="notnow"?"Not now":(f.status==="archived"?"Archived":"Closed"));
+      h+='<span class="pill '+(f.status==="sold"?"sold":"")+'">'+label+'</span>';
+    } else h+='<span class="when">'+esc(when)+'</span>';
+    h+='</div>';
+    if(b!=="closed"){
+      var pills=[];
+      pills.push('<span class="pill'+(age>=STALE_DAYS?"":(age>=AGING_DAYS?" aging":""))+'">Day '+(age+1)+'</span>');
+      if(streak) pills.push('<span class="pill'+(streak>=COOL_AFTER-1?" hot":"")+'">'+streak+' unanswered</span>');
+      if(tToday>=DAILY_CAP) pills.push('<span class="pill hot">Called '+tToday+'x today, give it a rest</span>');
+      if(f.status==="cooling"&&b!=="cooling") pills.push('<span class="pill aging">Back from cooling</span>');
+      h+='<div class="pills">'+pills.join("")+'</div>';
+    }
+    if(f.phone) h+='<p><button class="phonebtn" type="button" data-act="copyphone">'+esc(f.phone)+'</button> <span class="meta">tap to copy</span></p>';
+    if(f.note) h+='<p>'+esc(f.note)+'</p>';
+    var meta=[];
+    if(f.source) meta.push("Met: "+f.source);
+    if(calls.length) meta.push(calls.length+" call"+(calls.length===1?"":"s")+", last: "+(DISP[calls[0].disposition]||calls[0].disposition)+" "+stamp(calls[0].at));
+    if(meta.length) h+='<p class="meta">'+esc(meta.join(" · "))+'</p>';
+
+    if(b==="cooling"){
+      h+='<div class="actions"><button class="btn accent" type="button" data-act="unchill">Bring back now</button><button class="btn" type="button" data-act="archive">Archive</button></div>';
+    } else if(b!=="closed"){
+      var nx=nextAnchorSlot(f.id,tToday>=DAILY_CAP?1:0);
+      h+='<div class="loglabel">Log this call</div><div class="actions">';
+      ["noanswer","voicemail","callback","notint","sold","wrong"].forEach(function(k){
+        var cls=k==="sold"?"good":(k==="notint"||k==="wrong"?"warn":"");
+        h+='<button class="btn sm '+cls+'" type="button" data-act="log" data-disp="'+k+'">'+DISP[k]+'</button>';
+      });
+      h+='</div><div class="actions">';
+      h+='<button class="btn accent" type="button" data-act="nextslot">Move to '+esc(slotLabel(nx))+'</button>';
+      h+='<button class="btn" type="button" data-act="edit">Edit</button>';
+      h+='<a class="btn" href="'+esc(calLink(f))+'">Add to Google Calendar</a>';
+      h+='</div><div class="actions"><button class="btn" type="button" data-act="cool">Cool off '+COOL_DAYS+' days</button><button class="btn" type="button" data-act="archive">Archive</button></div>';
+    } else {
+      h+='<div class="actions"><button class="btn" type="button" data-act="reopen">Reopen</button>';
+      h+='<button class="btn warn" type="button" data-act="delete">'+(state.pending==="del:"+f.id?"Tap again to delete":"Delete")+'</button></div>';
+    }
+
+    h+='<div class="detail"'+(open?'':' hidden')+'>';
+    if(b!=="closed") h+='<label class="f" for="cn-'+esc(f.id)+'">Note for the next call you log (optional)<input id="cn-'+esc(f.id)+'" data-callnote autocomplete="off" placeholder="Mom wants to see the price first" value="'+esc(state.callNotes[f.id]||"")+'"></label>';
+    h+='<label class="board"><input type="checkbox" data-act="board" '+(f.board?"checked":"")+'> Logged on the install board</label>';
+    if(calls.length){
+      h+='<div class="loglabel">Call history</div><ul class="history">'+calls.map(function(c){ return '<li><span>'+esc(DISP[c.disposition]||c.disposition)+(c.note?' · '+esc(c.note):'')+'</span><span class="t">'+esc(stamp(c.at))+'</span></li>'; }).join("")+'</ul>';
+    } else h+='<p class="small">No calls logged yet.</p>';
+    h+='</div></article>';
+    return h;
+  }
+
+  function renderFollowups(){
+    var g={overdue:[],today:[],upcoming:[],cooling:[],closed:[]};
+    state.followups.forEach(function(f){ g[bucket(f)].push(f); });
+    ["overdue","today","upcoming","cooling"].forEach(function(k){ g[k].sort(function(a,b){ return sortKey(a).localeCompare(sortKey(b)); }); });
+    g.closed.sort(function(a,b){ return (b.updatedAt||0)-(a.updatedAt||0); });
+    var empties={overdue:"Nothing overdue. Keep it that way.",today:state.loaded.followups?"No callbacks due today.":"Loading your callbacks…",upcoming:"Nothing scheduled yet. Every name you get goes here.",closed:"Sold, archived and closed leads land here.",cooling:"Nothing cooling. Leads land here after "+COOL_AFTER+" unanswered tries, or when you cool them off."};
+    ["overdue","today","upcoming","cooling","closed"].forEach(function(k){
+      $("l-"+k).innerHTML=g[k].length?g[k].map(function(f){ return cardHTML(f,k); }).join(""):'<p class="empty">'+empties[k]+'</p>';
+      $("n-"+k).textContent=g[k].length?String(g[k].length):"";
+    });
+    $("c-overdue").textContent=g.overdue.length;
+    $("c-today").textContent=g.today.length;
+    $("c-sold").textContent=state.followups.filter(function(f){ return f.status==="sold"; }).length;
+    $("c-calls").textContent=callsToday().length;
+  }
+  function callsToday(){ var t=today(); return state.calls.filter(function(c){ return c.at && ymd(new Date(c.at))===t; }); }
+
+  function sumRows(rows){ return rows.reduce(function(a,r){ a.doors+=num(r.doors); a.opened+=num(r.opened); a.convos+=num(r.convos); a.names+=num(r.names); a.sales+=num(r.sales); return a; },{doors:0,opened:0,convos:0,names:0,sales:0}); }
+
+  function renderTally(){
+    var t=today(), start=addDays(t,-6);
+    var rows=state.tally.filter(function(r){ return r.date>=start&&r.date<=t; }).sort(function(a,b){ return (b.date+(b.createdAt||0)).localeCompare(a.date+(a.createdAt||0)); });
+    if(!rows.length){
+      $("week").innerHTML='<p class="empty">'+(state.loaded.tally?"No numbers logged yet. After today's block, log your doors, conversations and names above.":"Loading your numbers…")+'</p>';
+    } else {
+      var tot=sumRows(rows);
+      var h='<div class="table-wrap"><table><thead><tr><th>Day</th><th>Spot</th><th>Approached</th><th>Stopped</th><th>Convos</th><th>Leads</th><th>Sales</th><th></th></tr></thead><tbody>';
+      rows.forEach(function(r){ h+='<tr data-tid="'+esc(r.id)+'"><td>'+esc(niceDate(r.date))+(r.manual?'*':'')+'</td><td>'+esc(r.spot)+'</td><td>'+num(r.doors)+'</td><td>'+num(r.opened)+'</td><td>'+num(r.convos)+'</td><td>'+num(r.names)+'</td><td>'+num(r.sales)+'</td><td><button class="btn sm" type="button" data-act="tedit">Edit</button> <button class="btn sm warn" type="button" data-act="tdelete">'+(state.pending==="t:"+r.id?"Tap again":"Delete")+'</button></td></tr>'; });
+      h+='</tbody><tfoot><tr><td>Total</td><td></td><td>'+tot.doors+'</td><td>'+tot.opened+'</td><td>'+tot.convos+'</td><td>'+tot.names+'</td><td>'+tot.sales+'</td><td></td></tr></tfoot></table></div>';
+      var seen=tot.doors;
+      var line=[seen?Math.round(tot.opened/seen*100)+"% of everyone you approached stopped":"", tot.opened?Math.round(tot.convos/tot.opened*100)+"% of stops became real convos":"", tot.convos?Math.round(tot.names/tot.convos*100)+"% of convos became leads":""].filter(Boolean).join(" · ");
+      if(line) h+='<p class="small" style="margin-top:8px">'+esc(line)+'</p>';
+      if(rows.some(function(r){ return r.manual; })) h+='<p class="small">* Edited after the day.</p>';
+      var noteRows=rows.filter(function(r){ return r.notes; });
+      if(noteRows.length) h+='<div class="list" style="margin-top:10px">'+noteRows.map(function(r){ return '<div class="card"><p class="meta">'+esc(niceDate(r.date))+(r.spot?" · "+esc(r.spot):"")+'</p><p>'+esc(r.notes)+'</p></div>'; }).join("")+'</div>';
+      $("week").innerHTML=h;
+    }
+    var todays=state.tally.filter(function(r){ return r.date===t; }), ct=callsToday();
+    if(todays.length||ct.length){
+      var s=sumRows(todays), spots=todays.map(function(r){ return r.spot; }).filter(Boolean);
+      var parts=[];
+      if(todays.length) parts.push((s.doors?s.doors+" approached, ":"")+s.opened+" stopped, "+s.convos+" real conversations, "+s.names+" lead"+(s.names===1?"":"s")+", "+s.sales+" sale"+(s.sales===1?"":"s"));
+      if(ct.length){ var talked=ct.filter(function(c){ return c.disposition==="callback"||c.disposition==="sold"||c.disposition==="notint"; }).length; parts.push(ct.length+" follow-up call"+(ct.length===1?"":"s")+" ("+talked+" reached)"); }
+      $("vic-text").value="Numbers for "+niceDate(t)+": "+parts.join(". ")+"."+(spots.length?" Spots: "+spots.join(", ")+".":"");
+      $("vic-copy").disabled=false;
+    } else { $("vic-text").value=""; $("vic-text").placeholder="Log today's numbers or calls and your message for Vic shows up here."; $("vic-copy").disabled=true; }
+  }
+
+  function renderSnaps(){
+    var list=state.snapshots.slice().sort(function(a,b){ return (b.savedAt||0)-(a.savedAt||0); });
+    $("n-snaps").textContent=list.length?String(list.length):"";
+    if(!list.length){ $("l-snaps").innerHTML='<p class="empty">'+(state.loaded.snapshots?"No backups yet. Save one at the end of each day.":"Loading backups…")+'</p>'; return; }
+    $("l-snaps").innerHTML=list.map(function(s){
+      var info=s.encrypted?"Locked with a passphrase":((s.counts?s.counts.followups+" follow-ups, "+s.counts.calls+" calls, "+s.counts.tally+" days":"")||"Not locked");
+      return '<div class="card" data-sid="'+esc(s.id)+'"><div class="snap"><b>'+esc(s.name||stamp(s.savedAt))+'</b><span class="pill">'+(s.encrypted?"Locked":"Open")+'</span></div><p class="meta">'+esc(info)+'</p><div class="actions">'+
+        '<button class="btn accent" type="button" data-act="restore">'+(state.pending==="r:"+s.id?"Tap again to replace current data":"Restore")+'</button>'+
+        '<button class="btn warn" type="button" data-act="sdelete">'+(state.pending==="s:"+s.id?"Tap again to delete":"Delete")+'</button></div></div>';
+    }).join("");
+  }
+
+  function render(){
+    $("today-line").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+    renderFollowups(); renderTally(); renderSnaps(); renderCounter(); setBanner();
+  }
+
+  // ---------- Store ----------
+  function errText(e){
+    var c=e&&e.code;
+    if(c==="quota_exceeded") return "Storage is full. Delete old backups or closed leads to make room.";
+    if(c==="invalid_argument") return "That didn't save. Only the board's owner can make changes.";
+    if(c==="resource_exhausted") return "Too many saves at once. Wait a few seconds and try again.";
+    if(c==="revoked") return "Your saved data isn't available on this page right now.";
+    return "That didn't save. Check your signal and try again.";
+  }
+  function upsertLocal(key,obj){ var arr=state[key], i=arr.findIndex(function(x){ return x.id===obj.id; }); if(i>=0) arr[i]=obj; else arr.push(obj); }
+  async function write(coll,obj){
+    var k=coll+"/"+obj.id; if(busy[k]) return false; busy[k]=true;
+    var body=Object.assign({},obj); delete body.id;
+    try{
+      if(state.db) await state.db.collection(coll).doc(obj.id).set(body);
+      else { upsertLocal(coll,obj); render(); }
+      return true;
+    }catch(e){
+      if(e&&e.code==="unavailable"){
+        await new Promise(function(r){ setTimeout(r,600+Math.random()*600); });
+        try{ await state.db.collection(coll).doc(obj.id).set(body); return true; }catch(e2){ state.notes.write=errText(e2); setBanner(); return false; }
+      }
+      state.notes.write=errText(e); setBanner(); return false;
+    }finally{ delete busy[k]; }
+  }
+  async function remove(coll,id){
+    try{ if(state.db) await state.db.collection(coll).doc(id).delete(); else { state[coll]=state[coll].filter(function(x){ return x.id!==id; }); render(); } return true; }
+    catch(e){ state.notes.write=errText(e); setBanner(); return false; }
+  }
+  function newId(coll){ if(state.db){ try{ return state.db.collection(coll).doc().id; }catch(e){} } return "id-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8); }
+  function armPending(key){ state.pending=key; render(); setTimeout(function(){ if(state.pending===key){ state.pending=null; render(); } },3000); }
+
+  // ---------- Follow-up form ----------
+  function checkConflict(){
+    var d=$("f-date").value, t=$("f-time").value, c=conflict(d,t,state.editingId), box=$("f-conflict");
+    if(!c){ box.hidden=true; box.innerHTML=""; return null; }
+    var nf=nextFreeFrom(d,t,state.editingId);
+    box.innerHTML='<span>'+esc(niceTime(c.time))+' is already booked with '+esc(c.name||"another lead")+'.</span>'+(nf?'<button class="btn sm accent" type="button" id="f-usefree" data-date="'+nf.date+'" data-time="'+nf.time+'">Use '+esc(niceTime(nf.time))+'</button>':'');
+    box.hidden=false; return c;
+  }
+  function openForm(f,slot){
+    state.editingId=f?f.id:null;
+    $("f-name").value=f?str(f.name):"";
+    $("f-phone").value=f?str(f.phone):"";
+    $("f-source").value=f?str(f.source):"";
+    var s=slot||(f&&f.date?{date:f.date,time:str(f.time)}:nextAnchorSlot(null));
+    $("f-date").value=s.date; $("f-time").value=s.time;
+    $("f-note").value=f?str(f.note):"";
+    $("f-save").textContent=f?"Save changes":"Save follow-up";
+    $("f-form").hidden=false; $("open-form").hidden=true;
+    checkConflict();
+    window.scrollTo({top:0,behavior:"smooth"});
+    $("f-name").focus();
+  }
+  function closeForm(){ $("f-form").hidden=true; $("open-form").hidden=false; state.editingId=null; }
+
+  $("open-form").addEventListener("click",function(){ openForm(null); });
+  $("f-cancel").addEventListener("click",closeForm);
+  $("f-date").addEventListener("change",checkConflict);
+  $("f-time").addEventListener("change",checkConflict);
+  $("f-slot").addEventListener("click",function(){ var s=nextAnchorSlot(state.editingId); $("f-date").value=s.date; $("f-time").value=s.time; checkConflict(); });
+  $("f-conflict").addEventListener("click",function(ev){ var b=ev.target.closest("#f-usefree"); if(!b) return; $("f-date").value=b.getAttribute("data-date"); $("f-time").value=b.getAttribute("data-time"); checkConflict(); });
+  $("f-form").addEventListener("submit",async function(ev){
+    ev.preventDefault();
+    if(checkConflict()){ toast("That time's taken. Pick the open slot shown."); return; }
+    var existing=state.editingId?state.followups.find(function(x){ return x.id===state.editingId; }):null, now=Date.now();
+    var obj=Object.assign({},existing||{status:"open",board:false,createdAt:now},{
+      id:existing?existing.id:newId("followups"), name:$("f-name").value.trim(), phone:$("f-phone").value.trim(), source:$("f-source").value.trim(),
+      date:$("f-date").value||today(), time:$("f-time").value, note:$("f-note").value.trim(), updatedAt:now });
+    if(obj.status==="cooling") obj.status="open";
+    if(!obj.name) return;
+    $("f-save").disabled=true; var ok=await write("followups",obj); $("f-save").disabled=false;
+    if(ok){
+      state.notes.write=""; closeForm(); setBanner(); toast("Saved for "+slotLabel(obj));
+      if(!existing) bumpMany(linked?{leads:1,convos:1,stops:1,passed:1}:{leads:1});
+    }
+  });
+
+  // ---------- Card actions ----------
+  $("view-followups").addEventListener("click",async function(ev){
+    var el=ev.target.closest("[data-act]"); if(!el) return;
+    var card=el.closest(".card"); if(!card) return;
+    var id=card.getAttribute("data-id"), f=state.followups.find(function(x){ return x.id===id; }); if(!f) return;
+    var act=el.getAttribute("data-act");
+    if(act==="board") return;
+    if(act==="expand"){ state.expanded[id]=!state.expanded[id]; render(); return; }
+    if(act==="copyphone"){
+      try{ await navigator.clipboard.writeText(f.phone); toast("Number copied. Paste it into your dialer."); }
+      catch(e){ toast("Couldn't copy here. The number is "+f.phone); }
+      return;
+    }
+    if(act==="edit"){ openForm(f); return; }
+    if(act==="delete"){ if(state.pending!=="del:"+id){ armPending("del:"+id); return; } state.pending=null; await remove("followups",id); return; }
+    var now=Date.now();
+    if(act==="nextslot"){
+      var s=nextAnchorSlot(id,triesToday(id)>=DAILY_CAP?1:0); el.disabled=true;
+      if(await write("followups",Object.assign({},f,{status:"open",date:s.date,time:s.time,updatedAt:now}))) toast("Moved to "+slotLabel(s));
+      return;
+    }
+    if(act==="cool"||act==="unchill"||act==="archive"){
+      if(act==="archive"){ if(await write("followups",Object.assign({},f,{status:"archived",updatedAt:now}))) toast("Archived. Find it under Closed."); return; }
+      if(act==="unchill"){ var su=nextAnchorSlot(id); if(await write("followups",Object.assign({},f,{status:"open",date:su.date,time:su.time,updatedAt:now}))) toast("Back on for "+slotLabel(su)); return; }
+      var back=addDays(today(),COOL_DAYS), sc=nextFreeFrom(back,"10:00",id)||{date:back,time:"10:00"};
+      if(await write("followups",Object.assign({},f,{status:"cooling",date:sc.date,time:sc.time,cooledAt:now,updatedAt:now}))) toast("Cooling till "+slotLabel(sc));
+      return;
+    }
+    if(act==="reopen"){
+      var s2=nextAnchorSlot(id);
+      if(await write("followups",Object.assign({},f,{status:"open",date:s2.date,time:s2.time,updatedAt:now}))) toast("Reopened for "+slotLabel(s2));
+      return;
+    }
+    if(act==="log"){
+      var disp=el.getAttribute("data-disp"), noteEl=card.querySelector("[data-callnote]"), note=noteEl?noteEl.value.trim():"";
+      card.querySelectorAll('[data-act="log"]').forEach(function(b){ b.disabled=true; });
+      var call={id:newId("calls"),leadId:id,leadName:f.name||"",disposition:disp,note:note,at:now};
+      if(!(await write("calls",call))){ render(); return; }
+      delete state.callNotes[id];
+      if(disp==="noanswer"||disp==="voicemail"){
+        var streakNow=unreachedStreak(id)+(state.calls.some(function(c){ return c.id===call.id; })?0:1);
+        var todayNow=triesToday(id)+(state.calls.some(function(c){ return c.id===call.id; })?0:1);
+        if(streakNow>=COOL_AFTER){
+          var back2=addDays(today(),COOL_DAYS), sc2=nextFreeFrom(back2,"10:00",id)||{date:back2,time:"10:00"};
+          await write("followups",Object.assign({},f,{status:"cooling",date:sc2.date,time:sc2.time,cooledAt:now,updatedAt:now}));
+          toast(streakNow+" tries with no answer. Cooling till "+slotLabel(sc2)+".");
+        } else {
+          var s3=nextAnchorSlot(id,todayNow>=DAILY_CAP?1:0);
+          await write("followups",Object.assign({},f,{status:"open",date:s3.date,time:s3.time,updatedAt:now}));
+          toast(DISP[disp]+" logged. Next try: "+slotLabel(s3));
+        }
+      } else if(disp==="callback"){
+        toast("Logged. Set the time they gave you.");
+        openForm(f);
+      } else if(disp==="sold"){
+        await write("followups",Object.assign({},f,{status:"sold",updatedAt:now})); toast("Sold! Logged.");
+      } else if(disp==="notint"){
+        await write("followups",Object.assign({},f,{status:"notnow",updatedAt:now})); toast("Logged and closed as not now.");
+      } else if(disp==="wrong"){
+        await write("followups",Object.assign({},f,{status:"dead",updatedAt:now})); toast("Logged as wrong number and closed.");
+      }
+      return;
+    }
+  });
+  $("view-followups").addEventListener("input",function(ev){
+    var el=ev.target; if(!el.hasAttribute("data-callnote")) return;
+    state.callNotes[el.closest(".card").getAttribute("data-id")]=el.value;
+  });
+  $("view-followups").addEventListener("change",async function(ev){
+    var el=ev.target; if(el.getAttribute("data-act")!=="board") return;
+    var id=el.closest(".card").getAttribute("data-id"), f=state.followups.find(function(x){ return x.id===id; }); if(!f) return;
+    await write("followups",Object.assign({},f,{board:el.checked,updatedAt:Date.now()}));
+  });
+
+  // ---------- Tally ----------
+  $("t-date").value=today();
+  var editingTally=null;
+  function resetTallyForm(){
+    editingTally=null; $("t-save").textContent="Log these numbers"; $("t-cancel").hidden=true; $("t-date").value=today();
+    ["t-spot","t-doors","t-opened","t-convos","t-names","t-sales","t-notes"].forEach(function(k){ $(k).value=""; });
+  }
+  $("t-cancel").addEventListener("click",resetTallyForm);
+  $("t-form").addEventListener("submit",async function(ev){
+    ev.preventDefault();
+    if(editingTally){
+      var prev=state.tally.find(function(x){ return x.id===editingTally; });
+      if(prev){
+        var upd=Object.assign({},prev,{date:$("t-date").value||prev.date,spot:$("t-spot").value.trim(),doors:num($("t-doors").value),opened:num($("t-opened").value),convos:num($("t-convos").value),names:num($("t-names").value),sales:num($("t-sales").value),notes:$("t-notes").value.trim(),manual:true,editedAt:Date.now()});
+        $("t-save").disabled=true; var ok2=await write("tally",upd); $("t-save").disabled=false;
+        if(ok2){ resetTallyForm(); toast("Changes saved."); }
+        return;
+      }
+      resetTallyForm();
+    }
+    var obj={id:newId("tally"),date:$("t-date").value||today(),spot:$("t-spot").value.trim(),doors:num($("t-doors").value),opened:num($("t-opened").value),convos:num($("t-convos").value),names:num($("t-names").value),sales:num($("t-sales").value),notes:$("t-notes").value.trim(),createdAt:Date.now()};
+    $("t-save").disabled=true; var ok=await write("tally",obj); $("t-save").disabled=false;
+    if(ok){ state.notes.write=""; ["t-spot","t-doors","t-opened","t-convos","t-names","t-sales","t-notes"].forEach(function(k){ $(k).value=""; }); setBanner(); toast("Numbers logged."); }
+  });
+  $("week").addEventListener("click",async function(ev){
+    var ed=ev.target.closest('[data-act="tedit"]');
+    if(ed){
+      var r=state.tally.find(function(x){ return x.id===ed.closest("tr").getAttribute("data-tid"); }); if(!r) return;
+      editingTally=r.id;
+      $("t-date").value=r.date||today(); $("t-spot").value=str(r.spot); $("t-doors").value=num(r.doors); $("t-opened").value=num(r.opened);
+      $("t-convos").value=num(r.convos); $("t-names").value=num(r.names); $("t-sales").value=num(r.sales); $("t-notes").value=str(r.notes);
+      $("t-save").textContent="Save changes"; $("t-cancel").hidden=false;
+      window.scrollTo({top:0,behavior:"smooth"}); $("t-notes").focus();
+      return;
+    }
+    var el=ev.target.closest('[data-act="tdelete"]'); if(!el) return;
+    var id=el.closest("tr").getAttribute("data-tid");
+    if(state.pending!=="t:"+id){ armPending("t:"+id); return; }
+    state.pending=null; await remove("tally",id);
+  });
+  $("vic-copy").addEventListener("click",async function(){
+    var txt=$("vic-text").value; if(!txt) return;
+    try{ await navigator.clipboard.writeText(txt); $("vic-status").textContent="Copied. Paste it into your text to Vic."; toast("Copied for Vic."); }
+    catch(e){ $("vic-text").focus(); $("vic-text").select(); $("vic-status").textContent="Copy didn't go through here. The message is selected, so copy it from the box."; }
+  });
+
+  // ---------- Backups ----------
+  var hasCrypto=!!(window.crypto&&window.crypto.subtle);
+  function b64(buf){ var b=new Uint8Array(buf),s=""; for(var i=0;i<b.length;i++) s+=String.fromCharCode(b[i]); return btoa(s); }
+  function unb64(s){ var bin=atob(s),b=new Uint8Array(bin.length); for(var i=0;i<bin.length;i++) b[i]=bin.charCodeAt(i); return b; }
+  async function deriveKey(pass,salt){
+    var base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:200000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+  }
+  async function lock(obj,pass){ var salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)); var key=await deriveKey(pass,salt); var ct=await crypto.subtle.encrypt({name:"AES-GCM",iv:iv},key,new TextEncoder().encode(JSON.stringify(obj))); return {salt:b64(salt),iv:b64(iv),data:b64(ct)}; }
+  async function unlock(rec,pass){ var key=await deriveKey(pass,unb64(rec.salt)); var pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(rec.iv)},key,unb64(rec.data)); return JSON.parse(new TextDecoder().decode(pt)); }
+
+  $("b-save").addEventListener("click",async function(){
+    var pass=$("b-pass").value, now=Date.now();
+    var payload={followups:state.followups,tally:state.tally,calls:state.calls,counters:state.counters};
+    var doc={id:"snap-"+now,name:stamp(now),savedAt:now,counts:{followups:state.followups.length,calls:state.calls.length,tally:state.tally.length}};
+    $("b-save").disabled=true;
+    try{
+      if(pass){ if(!hasCrypto){ toast("Locking isn't available in this browser. Save without a passphrase."); return; } Object.assign(doc,{encrypted:true},await lock(payload,pass)); delete doc.counts; }
+      else { doc.encrypted=false; doc.data=JSON.stringify(payload); }
+      if(JSON.stringify(doc).length>240000){ toast("This backup is too big. Delete old closed leads first."); return; }
+      if(await write("snapshots",doc)){ toast("Backup saved: "+doc.name); state.notes.write=""; setBanner(); }
+    } catch(e){ toast("Backup didn't save. Try again."); }
+    finally{ $("b-save").disabled=false; }
+  });
+
+  async function restoreFrom(snap){
+    var payload;
+    try{
+      if(snap.encrypted){ var pass=$("b-pass").value; if(!pass){ toast("Type this backup's passphrase above first."); return; } payload=await unlock(snap,pass); }
+      else payload=JSON.parse(snap.data);
+    } catch(e){ toast(snap.encrypted?"Wrong passphrase. Nothing was changed.":"That backup couldn't be read. Nothing was changed."); return; }
+    toast("Restoring… keep this page open.");
+    var colls=["followups","tally","calls","counters"];
+    for(var c=0;c<colls.length;c++){
+      var coll=colls[c], items=Array.isArray(payload[coll])?payload[coll]:[], keep={};
+      items.forEach(function(x){ keep[x.id]=true; });
+      var current=state[coll].slice();
+      for(var i=0;i<current.length;i++){ if(!keep[current[i].id]){ await remove(coll,current[i].id); await new Promise(function(r){ setTimeout(r,80); }); } }
+      for(var j=0;j<items.length;j++){ if(items[j]&&items[j].id){ await write(coll,items[j]); await new Promise(function(r){ setTimeout(r,80); }); } }
+    }
+    toast("Restored to "+(snap.name||stamp(snap.savedAt)));
+  }
+  $("l-snaps").addEventListener("click",async function(ev){
+    var el=ev.target.closest("[data-act]"); if(!el) return;
+    var id=el.closest(".card").getAttribute("data-sid"), snap=state.snapshots.find(function(s){ return s.id===id; }); if(!snap) return;
+    var act=el.getAttribute("data-act");
+    if(act==="restore"){ if(state.pending!=="r:"+id){ armPending("r:"+id); return; } state.pending=null; render(); await restoreFrom(snap); }
+    if(act==="sdelete"){ if(state.pending!=="s:"+id){ armPending("s:"+id); return; } state.pending=null; await remove("snapshots",id); toast("Backup deleted."); }
+  });
+
+  // ---------- Counter ----------
+  function counterToday(){
+    var t=today();
+    if(state.counterLocal&&state.counterLocal.date===t) return state.counterLocal;
+    var c=state.counters.find(function(x){ return x.id===t; });
+    return {date:t,passed:c?num(c.passed):0,stops:c?num(c.stops):0,convos:c?num(c.convos):0,leads:c?num(c.leads):0};
+  }
+  function renderCounter(){
+    var c=counterToday();
+    $("k-stops-n").textContent=c.stops; $("k-convos-n").textContent=c.convos; $("k-leads-n").textContent=c.leads; $("k-passed-n").textContent=c.passed;
+    $("k-rate").textContent=c.passed?([Math.round(c.stops/c.passed*100)+"% of people approached stopped", c.stops?Math.round(c.convos/c.stops*100)+"% of stops became convos":"", c.convos?Math.round(c.leads/c.convos*100)+"% of convos became leads":""].filter(Boolean).join(" · ")+"."):"Approached = everyone you try. Stop = answered or gave one objection. Convo = kept talking past that.";
+  }
+  var counterTimer=null, counterSaving=false, counterDirty=false;
+  async function flushCounter(){
+    if(counterSaving){ counterDirty=true; return; }
+    var c=counterToday(); counterSaving=true; counterDirty=false;
+    await write("counters",{id:c.date,date:c.date,passed:c.passed,stops:c.stops,convos:c.convos,leads:c.leads,updatedAt:Date.now()});
+    counterSaving=false;
+    if(counterDirty) flushCounter();
+  }
+  var linked=true;
+  try{ var lv=localStorage.getItem("floup-link"); if(lv!==null) linked=lv==="1"; }catch(e){}
+  $("k-link").checked=linked;
+  $("k-link").addEventListener("change",function(){ linked=$("k-link").checked; try{ localStorage.setItem("floup-link",linked?"1":"0"); }catch(e){} toast(linked?"Counts linked.":"Counts unlinked. Each button counts on its own."); });
+  function bumpMany(deltas){
+    var c=Object.assign({},counterToday());
+    Object.keys(deltas).forEach(function(k){ c[k]=Math.max(0,num(c[k])+deltas[k]); });
+    state.counterLocal=c; renderCounter();
+    try{ if(navigator.vibrate) navigator.vibrate(25); }catch(e){}
+    clearTimeout(counterTimer); counterTimer=setTimeout(flushCounter,900);
+  }
+  function bump(field,delta){
+    var c=Object.assign({},counterToday());
+    c[field]=Math.max(0,c[field]+delta);
+    state.counterLocal=c; renderCounter(); $("c-calls").textContent=callsToday().length;
+    try{ if(navigator.vibrate) navigator.vibrate(25); }catch(e){}
+    clearTimeout(counterTimer); counterTimer=setTimeout(flushCounter,900);
+  }
+  $("k-stops").addEventListener("click",function(){ if(linked) bumpMany({stops:1,passed:1}); else bump("stops",1); });
+  $("k-passed").addEventListener("click",function(){ bump("passed",1); });
+  $("k-passed-undo").addEventListener("click",function(){ bump("passed",-1); });
+  $("k-convos").addEventListener("click",function(){ if(linked) bumpMany({convos:1,stops:1,passed:1}); else bump("convos",1); });
+  $("k-stops-undo").addEventListener("click",function(){ if(linked) bumpMany({stops:-1,passed:-1}); else bump("stops",-1); });
+  $("k-convos-undo").addEventListener("click",function(){ if(linked) bumpMany({convos:-1,stops:-1,passed:-1}); else bump("convos",-1); });
+  $("k-send").addEventListener("click",function(){
+    var c=counterToday();
+    $("t-date").value=c.date; $("t-doors").value=c.passed; $("t-opened").value=c.stops; $("t-convos").value=c.convos; $("t-names").value=c.leads;
+    location.hash="tally"; showView(); $("t-spot").focus();
+    toast("Counts added. Fill in the rest and tap Log these numbers.");
+  });
+
+  // ---------- Tabs ----------
+  function showView(){
+    var h=location.hash.replace("#",""), v=(h==="tally"||h==="backups"||h==="counter")?h:"followups";
+    ["followups","counter","tally","backups"].forEach(function(k){ $("view-"+k).hidden=v!==k; $("tab-"+k).setAttribute("aria-selected",String(v===k)); });
+  }
+  document.querySelectorAll(".tab").forEach(function(b){ b.addEventListener("click",function(){ location.hash=b.getAttribute("data-view"); showView(); }); });
+  window.addEventListener("hashchange",showView);
+  showView(); render();
+
+  function subscribe(coll,label){
+    var settled=false;
+    var timer=setTimeout(function(){ if(!settled){ state.notes[coll]="Can't reach your saved "+label+" yet. It'll update by itself once you have signal."; setBanner(); } },10000);
+    state.db.collection(coll).onSnapshot(function(snap){
+      state[coll]=snap.docs.filter(function(d){ return d.exists; }).map(function(d){ return Object.assign({id:d.id},d.data()); });
+      state.loaded[coll]=true;
+      if(!snap.metadata.fromCache){ settled=true; clearTimeout(timer); state.notes[coll]=""; }
+      render();
+    },function(e){
+      settled=true; clearTimeout(timer); state.loaded[coll]=true;
+      state.notes[coll]=e&&e.code==="revoked"?"Your saved data isn't available on this page right now.":"Your saved "+label+" didn't load. Reopen the page to try again.";
+      render();
+    });
+  }
+
+  (async function init(){
+    var db=null;
+    try{ if(window.claude&&typeof window.claude.use==="function") db=await window.claude.use("db"); }catch(e){ db=null; }
+    if(!db){ state.offline=true; Object.keys(state.loaded).forEach(function(k){ state.loaded[k]=true; }); render(); return; }
+    state.db=db;
+    subscribe("followups","callbacks");
+    subscribe("calls","call log");
+    subscribe("tally","numbers");
+    subscribe("snapshots","backups");
+    subscribe("counters","counts");
+  })();
+
+  state._day=today();
+  setInterval(function(){ var t=today(); if(t!==state._day){ state._day=t; render(); } },60000);
+})();
+</script>
+</body>
+</html>
