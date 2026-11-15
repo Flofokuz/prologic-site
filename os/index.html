@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prologic OS · Prologic Strategies</title>
+<style>
+:root{--bg:#121417;--panel:#1b1e23;--raise:#23272e;--ink:#ece8df;--muted:#a09a8c;--line:#343a44;--gold:#d9a441;--green:#6fc283;--red:#e07a6a;--blue:#86a5e0}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--gold)}
+nav.top{background:#0c0e11;padding:10px 20px;font:600 13px/1.4 system-ui,sans-serif;display:flex;gap:18px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+nav.top a{color:var(--ink);text-decoration:none}nav.top a.brand{color:var(--gold);letter-spacing:.06em}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px;display:grid;gap:16px}
+h1{font-size:1.9rem;line-height:1.1;margin:0}h2{font-size:1.2rem;margin:0}h3{font-size:1rem;margin:0}
+.sub{color:var(--muted);margin:4px 0 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:600 1rem system-ui,sans-serif;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--raise);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#17130a;font-weight:600}
+.btn.sm{padding:5px 9px;font-size:.85rem}.btn:disabled{opacity:.5;cursor:default}
+input,select,textarea{font:16px system-ui,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+label.f{display:grid;gap:4px;font-size:.82rem;color:var(--muted);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:560px){.grid3{grid-template-columns:1fr 1fr}}
+.hint{color:var(--muted);font-size:.86rem;margin:0}
+.pill{display:inline-block;font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pill.gold{color:var(--gold);border-color:var(--gold)}.pill.red{color:var(--red);border-color:var(--red)}.pill.green{color:var(--green);border-color:var(--green)}
+.bar{height:10px;border-radius:6px;background:var(--bg);overflow:hidden;border:1px solid var(--line)}.bar i{display:block;height:100%;background:var(--gold)}
+.bar.over i{background:var(--red)}
+.list{display:grid;gap:8px}
+.item{background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
+.item .top{display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.item b{overflow-wrap:anywhere}
+.empty{color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:12px;margin:0}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:600;max-width:calc(100% - 32px)}
+[hidden]{display:none!important}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.tile{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start}.tile.off{opacity:.6}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">PROLOGIC STRATEGIES</a><a href="/#tools">Tools</a><a href="/os/">OS</a><a href="/#pullup">Pull up</a></nav>
+<div class="wrap">
+  <header>
+    <h1>Prologic OS</h1>
+    <p class="sub">Every tool you use on this device, on one screen. Each one you add makes the others stronger.</p>
+  </header>
+  <main id="main"></main>
+  <section class="card"><h3>Yours to keep</h3><p class="hint">No account. Everything stays on this device, and one file backs it all up. Every tool here still works on its own, and the code is open to copy.</p></section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function pad(n){return String(n).padStart(2,"0");}
+function ymd(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function today(){return ymd(new Date());}
+function addDays(s,n){var p=s.split("-").map(Number),d=new Date(p[0],p[1]-1,p[2]);d.setDate(d.getDate()+n);return ymd(d);}
+function nice(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){toast("Couldn't save on this device.");return false;}}
+var toastT=null;function toast(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true;},2600);}
+function download(name,obj){var b=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);}
+var STATS=[["earn","Earn","Money in, bills handled"],["build","Build","Making and finishing things"],["kin","Kin","Family, friends, your people"],["shelter","Shelter","Home, food, the floor under you"],["body","Body","Health, movement, rest"],["mind","Mind","Learning and thinking"],["voice","Voice","Speaking up, creating, performing"],["trust","Trust","Promises kept, showing up"]];
+var RANKS=[[0,"Visitor"],[100,"Prairie"],[500,"Aplomado"],[1500,"Peregrine"],[4000,"Gyrfalcon"]];
+function rankOf(x){var r=RANKS[0],n=null;for(var i=0;i<RANKS.length;i++){if(x>=RANKS[i][0]){r=RANKS[i];n=RANKS[i+1]||null;}}return {name:r[1],next:n};}
+function lvl(x){return 1+Math.floor(Math.sqrt(x/40));}
+function questLoad(){var q=lsGet("pls-quest",null);if(!q||typeof q!=="object")q={};q.v=1;q.name=q.name||"";q.quests=Array.isArray(q.quests)?q.quests:[];q.log=Array.isArray(q.log)?q.log:[];q.claims=q.claims||{};q.energy=q.energy||{};return q;}
+function xpBy(q){var o={};STATS.forEach(function(s){o[s[0]]=0;});q.log.forEach(function(l){if(o[l.stat]!=null)o[l.stat]+=Number(l.xp)||0;});return o;}
+function flowLoad(){var f=lsGet("pls-flow",null);if(!f||!Array.isArray(f.checks))f={checks:[]};return f;}
+
+function has(k){try{return localStorage.getItem(k)!=null;}catch(e){return false;}}
+function floupToday(){var m=lsGet("floup-db:counters",{}),c=m[today()]||null;return c;}
+function boosts(Q){
+  var out=[],t=today();
+  var c=floupToday();if(c){var v=Math.min(60,(Number(c.stops)||0)+(Number(c.convos)||0)*2),e=(Number(c.leads)||0)*10;
+    if(v)out.push({key:"floup-voice:"+t,stat:"voice",xp:v,t:"Street work in FloUp: "+(c.stops||0)+" stops, "+(c.convos||0)+" convos",src:"FloUp"});
+    if(e)out.push({key:"floup-earn:"+t,stat:"earn",xp:e,t:"Leads added in FloUp: "+(c.leads||0),src:"FloUp"});}
+  var fc=flowLoad().checks.filter(function(x){return ymd(new Date(x.at))===t;}).length;
+  if(fc)out.push({key:"flow:"+t,stat:"mind",xp:Math.min(3,fc)*5,t:"Flow check-ins today: "+fc,src:"Flow"});
+  var tr=lsGet("tree_app_data",null);if(tr&&tr.events)Object.keys(tr.events).forEach(function(id){var ev=tr.events[id];if(ev&&ev.inputs&&Object.keys(ev.inputs).length)out.push({key:"tree:"+id,stat:"build",xp:20,t:"Event planned in T.R.E.E.: "+(ev.name||"event"),src:"T.R.E.E."});});
+  return out.map(function(b){b.got=Number(Q.claims[b.key])||0;b.due=Math.max(0,b.xp-b.got);return b;});
+}
+function render(){
+  var Q=questLoad(), x=xpBy(Q), total=STATS.reduce(function(a,s){return a+x[s[0]];},0), r=rankOf(total);
+  var fl=flowLoad().checks, lastF=fl[fl.length-1], c=floupToday(), fu=lsGet("floup-db:followups",{}), tr=lsGet("tree_app_data",null);
+  var due=Object.keys(fu).filter(function(id){var f=fu[id];return (!f.status||f.status==="open")&&(f.date||today())<=today();}).length;
+  var openQ=Q.quests.filter(function(q){return q.repeat?q.last!==today():(!q.done&&q.when!=="later"&&(q.day||today())<=today());}).length;
+  var apps=[
+   ["Quest Ledger","/quest/",has("pls-quest"),has("pls-quest")?r.name+" · "+total+" XP · "+openQ+" open today":"Your player sheet: goals, energy, stats."],
+   ["Flow State Calculator","/flow/",fl.length>0,lastF?"Last pathway: "+lastF.path.charAt(0).toUpperCase()+lastF.path.slice(1)+" · energy "+lastF.energy:"A five-question read on this moment."],
+   ["FloUp Lead Ledger","/floup/",has("floup-db:followups")||has("floup-db:counters"),(has("floup-db:followups")||has("floup-db:counters"))?due+" callbacks due · today "+(c?(c.stops||0)+" stops, "+(c.leads||0)+" leads":"no counts yet"):"Callbacks, street counts, daily numbers."],
+   ["T.R.E.E.","/tree/",!!tr,tr&&tr.events?Object.keys(tr.events).length+" event"+(Object.keys(tr.events).length===1?"":"s")+" saved":"What your table costs and what closes the gap."]];
+  var on=apps.filter(function(a){return a[2];}).length, bs=boosts(Q), dueB=bs.filter(function(b){return b.due>0;});
+  var h='<div style="display:grid;gap:16px"><section class="card"><div class="row"><h2>Your tools</h2><span class="pill gold">'+on+' of '+apps.length+' in use</span></div><div class="tiles">'+apps.map(function(a){return '<div class="tile'+(a[2]?'':' off')+'"><div class="row"><h3>'+a[0]+'</h3><span class="pill'+(a[2]?' green':'')+'">'+(a[2]?'On':'Not started')+'</span></div><span class="hint">'+esc(a[3])+'</span><a class="btn" style="text-decoration:none;text-align:center" href="'+a[1]+'">'+(a[2]?'Open':'Start')+'</a></div>';}).join("")+'</div></section>';
+  h+='<section class="card"><div class="row"><h2>Boosts</h2><span class="hint">Work in one tool earns XP on your sheet.</span></div><div class="list">'+(bs.length?bs.map(function(b){return '<div class="item"><div class="top"><b>'+esc(b.t)+'</b><span class="pill gold">+'+b.xp+' '+esc(b.stat)+'</span></div><div class="row"><span class="hint">from '+esc(b.src)+'</span>'+(b.due>0?'<button class="btn sm gold" data-claim="'+esc(b.key)+'">Claim +'+b.due+'</button>':'<span class="pill green">Claimed</span>')+'</div></div>';}).join(""):'<p class="empty">Nothing to claim yet. Log street counts in FloUp, run a Flow check, or plan an event in T.R.E.E., then come back.</p>')+'</div>'+(dueB.length>1?'<button class="btn gold" data-claimall="1">Claim all</button>':'')+
+   '<p class="hint">How it connects: your last Flow check sets the suggested energy in Quest Ledger. FloUp counts feed Voice and Earn. Flow checks feed Mind. Events planned in T.R.E.E. feed Build.</p></section>';
+  h+='<section class="card"><h2>One backup for everything</h2><p class="hint">All of it lives in this browser on this device. Save one file to keep it safe or move it to another device.</p><div class="row"><button class="btn" id="exp">Save everything</button><button class="btn" id="imp">Load a backup</button><input type="file" id="impf" accept=".json" hidden></div></section></div>';
+  $("main").innerHTML=h;
+  $("exp").onclick=function(){var o={app:"prologic-os",v:1,saved:new Date().toISOString(),keys:{}};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k==="pls-quest"||k==="pls-flow"||k==="tree_app_data"||k.indexOf("floup-")===0)o.keys[k]=localStorage.getItem(k);}}catch(e){}download("prologic-os-backup-"+today()+".json",o);};
+  $("imp").onclick=function(){$("impf").click();};
+  $("impf").onchange=function(ev){var f=ev.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result);if(!o||o.app!=="prologic-os"||!o.keys)throw 0;Object.keys(o.keys).forEach(function(k){if(k==="pls-quest"||k==="pls-flow"||k==="tree_app_data"||k.indexOf("floup-")===0)localStorage.setItem(k,String(o.keys[k]));});render();toast("Backup loaded.");}catch(e){toast("That file isn't a Prologic OS backup.");}};rd.readAsText(f);};
+}
+function claim(keys){var Q=questLoad(),n=0;boosts(Q).forEach(function(b){if(keys&&keys.indexOf(b.key)<0)return;if(b.due<=0)return;Q.log.push({id:uid(),date:today(),t:b.t,stat:b.stat,cost:0,felt:0,xp:b.due,src:b.src});Q.claims[b.key]=b.xp;n+=b.due;});if(n){lsSet("pls-quest",Q);toast("+"+n+" XP on your sheet.");}render();}
+document.addEventListener("click",function(ev){var b=ev.target.closest("button");if(!b)return;if(b.dataset.claim){claim([b.dataset.claim]);return;}if(b.dataset.claimall){claim(null);return;}});
+window.addEventListener("storage",render);
+render();
+</script>
+</body>
+</html>
