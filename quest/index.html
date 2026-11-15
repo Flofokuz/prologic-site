@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quest Ledger · Prologic Strategies</title>
+<style>
+:root{--bg:#121417;--panel:#1b1e23;--raise:#23272e;--ink:#ece8df;--muted:#a09a8c;--line:#343a44;--gold:#d9a441;--green:#6fc283;--red:#e07a6a;--blue:#86a5e0}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--gold)}
+nav.top{background:#0c0e11;padding:10px 20px;font:600 13px/1.4 system-ui,sans-serif;display:flex;gap:18px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+nav.top a{color:var(--ink);text-decoration:none}nav.top a.brand{color:var(--gold);letter-spacing:.06em}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px;display:grid;gap:16px}
+h1{font-size:1.9rem;line-height:1.1;margin:0}h2{font-size:1.2rem;margin:0}h3{font-size:1rem;margin:0}
+.sub{color:var(--muted);margin:4px 0 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:600 1rem system-ui,sans-serif;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--raise);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#17130a;font-weight:600}
+.btn.sm{padding:5px 9px;font-size:.85rem}.btn:disabled{opacity:.5;cursor:default}
+input,select,textarea{font:16px system-ui,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+label.f{display:grid;gap:4px;font-size:.82rem;color:var(--muted);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:560px){.grid3{grid-template-columns:1fr 1fr}}
+.hint{color:var(--muted);font-size:.86rem;margin:0}
+.pill{display:inline-block;font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pill.gold{color:var(--gold);border-color:var(--gold)}.pill.red{color:var(--red);border-color:var(--red)}.pill.green{color:var(--green);border-color:var(--green)}
+.bar{height:10px;border-radius:6px;background:var(--bg);overflow:hidden;border:1px solid var(--line)}.bar i{display:block;height:100%;background:var(--gold)}
+.bar.over i{background:var(--red)}
+.list{display:grid;gap:8px}
+.item{background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
+.item .top{display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.item b{overflow-wrap:anywhere}
+.empty{color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:12px;margin:0}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:600;max-width:calc(100% - 32px)}
+[hidden]{display:none!important}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.stat{display:grid;gap:4px}.stat .top{display:flex;justify-content:space-between;gap:8px}
+.days{display:grid;gap:10px}
+.felt{display:flex;gap:6px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">PROLOGIC STRATEGIES</a><a href="/#tools">Tools</a><a href="/os/">OS</a><a href="/#pullup">Pull up</a></nav>
+<div class="wrap">
+  <header>
+    <h1>Quest Ledger</h1>
+    <p class="sub" id="who">Your real-life player sheet. Goals in, energy counted, skills tracked.</p>
+  </header>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-v="today" aria-selected="true">Today</button>
+    <button class="tab" role="tab" data-v="plan" aria-selected="false">Plan</button>
+    <button class="tab" role="tab" data-v="sheet" aria-selected="false">Sheet</button>
+    <button class="tab" role="tab" data-v="log" aria-selected="false">Log</button>
+  </div>
+  <main id="main"></main>
+  <section class="card"><h3>Yours to keep</h3><p class="hint">No account. Your numbers stay on this device. Save a copy any time and it opens anywhere. You can save this page and run it offline, and the code is open to copy.</p></section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function pad(n){return String(n).padStart(2,"0");}
+function ymd(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function today(){return ymd(new Date());}
+function addDays(s,n){var p=s.split("-").map(Number),d=new Date(p[0],p[1]-1,p[2]);d.setDate(d.getDate()+n);return ymd(d);}
+function nice(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){toast("Couldn't save on this device.");return false;}}
+var toastT=null;function toast(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true;},2600);}
+function download(name,obj){var b=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);}
+var STATS=[["earn","Earn","Money in, bills handled"],["build","Build","Making and finishing things"],["kin","Kin","Family, friends, your people"],["shelter","Shelter","Home, food, the floor under you"],["body","Body","Health, movement, rest"],["mind","Mind","Learning and thinking"],["voice","Voice","Speaking up, creating, performing"],["trust","Trust","Promises kept, showing up"]];
+var RANKS=[[0,"Visitor"],[100,"Prairie"],[500,"Aplomado"],[1500,"Peregrine"],[4000,"Gyrfalcon"]];
+function rankOf(x){var r=RANKS[0],n=null;for(var i=0;i<RANKS.length;i++){if(x>=RANKS[i][0]){r=RANKS[i];n=RANKS[i+1]||null;}}return {name:r[1],next:n};}
+function lvl(x){return 1+Math.floor(Math.sqrt(x/40));}
+function questLoad(){var q=lsGet("pls-quest",null);if(!q||typeof q!=="object")q={};q.v=1;q.name=q.name||"";q.quests=Array.isArray(q.quests)?q.quests:[];q.log=Array.isArray(q.log)?q.log:[];q.claims=q.claims||{};q.energy=q.energy||{};return q;}
+function xpBy(q){var o={};STATS.forEach(function(s){o[s[0]]=0;});q.log.forEach(function(l){if(o[l.stat]!=null)o[l.stat]+=Number(l.xp)||0;});return o;}
+function flowLoad(){var f=lsGet("pls-flow",null);if(!f||!Array.isArray(f.checks))f={checks:[]};return f;}
+
+var Q=questLoad(), view="today", feltFor=null;
+var RECH=[["Played a game","mind"],["Moved my body","body"],["Got still, stared into the distance","mind"],["Ate or drank something good","shelter"],["Music","voice"],["Time with my people","kin"],["Slept or napped","body"],["Something else","mind"]];
+function gainToday(){return Q.log.filter(function(l){return l.date===today()&&l.src==="recharge";}).reduce(function(a,l){return a+(Number(l.gain)||0);},0);}
+function statOpts(){return STATS.map(function(s){return '<option value="'+s[0]+'">'+s[1]+'</option>';}).join("");}
+function extras(){
+  return '<section class="card"><h2>Recharge</h2><p class="hint">Did something that gave energy back? Log it. It refills today and feeds a stat.</p><form id="rf" class="grid3">'+
+  '<label class="f">What<select id="r-a">'+RECH.map(function(r,i){return '<option value="'+i+'">'+r[0]+'</option>';}).join("")+'</select></label>'+
+  '<label class="f">Energy back<select id="r-g"><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option></select></label>'+
+  '<label class="f">Stat it fed<select id="r-s">'+statOpts()+'</select></label>'+
+  '<label class="f" style="grid-column:1/-1">Name it (optional)<input id="r-t" maxlength="80" placeholder="Hooped for 20 minutes" autocomplete="off"></label>'+
+  '<button class="btn gold" type="submit" style="grid-column:1/-1">Log recharge</button></form></section>'+
+  '<section class="card"><h2>Already did it?</h2><p class="hint">A spark hit and you used it before you could plan it. Add it after the fact and it still counts.</p><form id="sf" class="grid3">'+
+  '<label class="f" style="grid-column:1/-1">What did you do?<input id="s-t" required maxlength="140" placeholder="Wrote a verse out of nowhere" autocomplete="off"></label>'+
+  '<label class="f">Stat it trained<select id="s-s">'+statOpts()+'</select></label>'+
+  '<label class="f">Energy it took<select id="s-c"><option value="1">1 · light</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5 · heavy</option></select></label>'+
+  '<label class="f">When<select id="s-d"><option value="0">Today</option><option value="-1">Yesterday</option></select></label>'+
+  '<button class="btn gold" type="submit" style="grid-column:1/-1">Add it to the ledger</button></form></section>';
+}
+function save(){lsSet("pls-quest",Q);}
+function energyToday(){return Q.energy&&Q.energy.date===today()?Number(Q.energy.val):null;}
+function isDoneToday(q){return q.repeat?q.last===today():!!q.done;}
+function dueToday(q){if(q.when==="later")return false;if(q.repeat)return true;return !q.done&&(q.day||today())<=today();}
+function todays(){return Q.quests.filter(function(q){return dueToday(q)||(q.doneOn===today()&&!q.repeat);});}
+function statName(k){var s=STATS.filter(function(x){return x[0]===k;})[0];return s?s[1]:k;}
+function form(){
+  return '<form class="card" id="qf"><h2>Add a quest</h2>'+
+  '<label class="f">What is it?<input id="q-t" required maxlength="140" placeholder="Call three leads back" autocomplete="off"></label>'+
+  '<div class="grid3"><label class="f">Stat it trains<select id="q-s">'+STATS.map(function(s){return '<option value="'+s[0]+'">'+s[1]+'</option>';}).join("")+'</select></label>'+
+  '<label class="f">Energy it takes<select id="q-c"><option value="1">1 · light</option><option value="2" selected>2</option><option value="3">3 · solid</option><option value="4">4</option><option value="5">5 · heavy</option></select></label>'+
+  '<label class="f">When<select id="q-w"><option value="today">Today</option><option value="date">Pick a day</option><option value="daily">Every day</option><option value="later">Someday</option></select></label></div>'+
+  '<label class="f" id="q-dwrap" hidden>Day<input id="q-d" type="date"></label>'+
+  '<button class="btn gold" type="submit">Add quest</button></form>';
+}
+function questItem(q,inToday){
+  var done=isDoneToday(q)||(!q.repeat&&q.done);
+  var h='<div class="item"><div class="top"><b style="'+(done?'text-decoration:line-through;color:var(--muted)':'')+'">'+esc(q.t)+'</b><span class="pill gold">'+esc(statName(q.stat))+' · '+q.cost+'</span></div>';
+  if(feltFor===q.id){h+='<p class="hint">How did it feel?</p><div class="felt">'+[1,2,3,4,5].map(function(n){return '<button class="btn sm" data-felt="'+n+'">'+n+(n===1?' · light':n===5?' · heavy':'')+'</button>';}).join("")+'<button class="btn sm" data-cancelfelt="1">Not done yet</button></div>';}
+  else{h+='<div class="row"><span class="hint">'+(q.repeat?'Every day':(q.when==="later"?'Someday':(q.day&&q.day!==today()?nice(q.day):'')))+(q.day&&q.day<today()&&!done&&!q.repeat?' · carried over':'')+'</span><span>'+
+    (done?'<span class="pill green">Done</span>':'<button class="btn sm gold" data-done="'+q.id+'">Done</button>')+
+    (!done&&inToday&&!q.repeat?' <button class="btn sm" data-tomorrow="'+q.id+'">Tomorrow</button>':'')+
+    (!done&&q.when==="later"?' <button class="btn sm" data-pull="'+q.id+'">To today</button>':'')+
+    ' <button class="btn sm" data-del="'+q.id+'" aria-label="Remove quest">Remove</button></span></div>';}
+  return h+'</div>';
+}
+function vToday(){
+  var base=energyToday(), gain=gainToday(), e=base==null?null:Math.min(10,base+gain), list=todays(), open=list.filter(function(q){return !isDoneToday(q)&&!(q.done&&!q.repeat);});
+  var planned=open.reduce(function(a,q){return a+q.cost;},0), spent=Q.log.filter(function(l){return l.date===today()&&l.src==="quest";}).reduce(function(a,l){return a+(l.felt||l.cost||0);},0);
+  var fl=flowLoad().checks.slice(-1)[0], flowHint=fl&&ymd(new Date(fl.at))===today()?fl.energy:null;
+  var h='<section class="card"><div class="row"><h2>Energy today</h2><span class="pill">'+nice(today())+'</span></div>';
+  if(e==null){h+='<p class="hint">Before you plan, say how much you have. 1 is running on empty, 10 is full.</p><div class="felt">'+[1,2,3,4,5,6,7,8,9,10].map(function(n){return '<button class="btn sm'+(flowHint===n?' gold':'')+'" data-energy="'+n+'">'+n+'</button>';}).join("")+'</div>'+(flowHint?'<p class="hint">Your last Flow check today suggests '+flowHint+'.</p>':'<p class="hint">Not sure? <a href="/flow/">Run a Flow check</a> first.</p>');}
+  else{var left=e-spent, over=planned>left;
+    h+='<div class="row"><span>You have <b>'+e+'</b>'+(gain?' ('+base+' to start, +'+gain+' recharged)':'')+'. Spent <b>'+spent+'</b>. Open quests need <b>'+planned+'</b>.</span><button class="btn sm" data-reenergy="1">Change</button></div><div class="bar'+(over?' over':'')+'"><i style="width:'+Math.min(100,Math.round((spent+planned)/Math.max(1,e)*100))+'%"></i></div>'+
+    (over?'<p class="hint" style="color:var(--red)">That is more than you have left. Move one to tomorrow, or go in knowing it will cost you.</p>':'<p class="hint">You are inside your budget.</p>');}
+  h+='</section><section class="card"><h2>Today\'s quests</h2><div class="list">'+(list.length?list.map(function(q){return questItem(q,true);}).join(""):'<p class="empty">Nothing on today. Add one below, or pull one from Someday in Plan.</p>')+'</div></section>'+form()+extras();
+  h+='<section class="card"><h3>Rules of engagement</h3><ol class="hint" style="margin:0;padding-left:18px"><li>Every quest names the stat it trains and the energy it takes.</li><li>Say your energy before you plan the day. Today cannot hold more than you have.</li><li>When you finish, say how it felt. That is how the sheet learns your strengths.</li><li>Rest counts. Log what refills you; it gives energy back and feeds a stat.</li><li>XP comes only from things you actually did, and it is never taken away.</li></ol></section>';
+  return h;
+}
+function vPlan(){
+  var h='<section class="card"><h2>Next 7 days</h2><div class="days">', t=today(), es=Q.log.length?null:null;
+  for(var i=0;i<7;i++){var d=addDays(t,i), qs=Q.quests.filter(function(q){return q.repeat||(!q.done&&q.when!=="later"&&((q.day||t)===d||(i===0&&(q.day||t)<t)));}), sum=qs.reduce(function(a,q){return a+q.cost;},0);
+    h+='<div><div class="row"><h3>'+(i===0?'Today':nice(d))+'</h3><span class="pill'+(sum>10?' red':'')+'">needs '+sum+'</span></div><div class="list" style="margin-top:6px">'+(qs.length?qs.map(function(q){return questItem(q,false);}).join(""):'<p class="hint">Open.</p>')+'</div></div>';}
+  var later=Q.quests.filter(function(q){return q.when==="later"&&!q.done;});
+  h+='</div><p class="hint">A day that needs more than 10 is more than a full tank. Spread it out.</p></section><section class="card"><h2>Someday</h2><div class="list">'+(later.length?later.map(function(q){return questItem(q,false);}).join(""):'<p class="empty">Park goals here until you have a day for them.</p>')+'</div></section>'+form();
+  return h;
+}
+function reads(){
+  var by={},out=[];Q.log.forEach(function(l){if(l.src!=="quest"||!l.felt||l.retro)return;(by[l.stat]=by[l.stat]||[]).push(l.felt-l.cost);});
+  Object.keys(by).forEach(function(k){var a=by[k];if(a.length<3)return;var m=a.reduce(function(x,y){return x+y;},0)/a.length;
+    if(m<=-0.5)out.push('<b>'+esc(statName(k))+'</b> comes easier than you plan for. That is a strength; you can take on more of it.');
+    else if(m>=0.5)out.push('<b>'+esc(statName(k))+'</b> costs you more than you plan for. Budget extra energy, or break those quests smaller.');});
+  var x=xpBy(Q), low=STATS.filter(function(s){return x[s[0]]===0;}).map(function(s){return s[1];});
+  if(Q.log.length>=5&&low.length)out.push('No XP yet in: '+esc(low.join(", "))+'. Is that a choice, or a blind spot?');
+  return out;
+}
+function vSheet(){
+  var x=xpBy(Q), total=STATS.reduce(function(a,s){return a+x[s[0]];},0), r=rankOf(total), rd=reads();
+  var h='<section class="card"><div class="row"><h2>'+esc(Q.name||"Your sheet")+'</h2><span class="pill gold">'+r.name+' · '+total+' XP</span></div>'+
+   (r.next?'<p class="hint">'+(r.next[0]-total)+' XP to '+r.next[1]+'.</p>':'<p class="hint">Top rank. Keep tending it.</p>')+
+   '<label class="f">Name on the sheet<input id="nm" maxlength="40" value="'+esc(Q.name)+'" placeholder="Your name or handle"></label></section><section class="card"><h2>Stats</h2>';
+  STATS.forEach(function(s){var v=x[s[0]],L=lvl(v),lo=40*(L-1)*(L-1),hi=40*L*L;
+    h+='<div class="stat"><div class="top"><span><b>'+s[1]+'</b> <span class="hint">'+s[2]+'</span></span><span class="pill">Lv '+L+' · '+v+' XP</span></div><div class="bar"><i style="width:'+Math.round((v-lo)/(hi-lo)*100)+'%"></i></div></div>';});
+  h+='</section><section class="card"><h2>What the ledger sees</h2>'+(rd.length?'<div class="list">'+rd.map(function(t){return '<p style="margin:0">'+t+'</p>';}).join("")+'</div>':'<p class="empty">Finish a few quests and say how each one felt. After three in a stat, your reads show up here.</p>')+'</section>'+
+  '<section class="card"><h2>Backup</h2><p class="hint">Everything stays on this device. Save a copy to move it or keep it safe.</p><div class="row"><button class="btn" id="exp">Save a copy</button><button class="btn" id="imp">Load a copy</button><input type="file" id="impf" accept=".json" hidden></div></section>';
+  return h;
+}
+function vLog(){
+  var l=Q.log.slice().reverse().slice(0,60);
+  return '<section class="card"><h2>Log</h2><div class="list">'+(l.length?l.map(function(e){return '<div class="item"><div class="top"><b>'+esc(e.t)+'</b><span class="pill gold">+'+e.xp+' '+esc(statName(e.stat))+'</span></div><span class="hint">'+nice(e.date)+(e.src==="recharge"?' · recharge, gave back '+e.gain:e.retro?' · added after the fact, took '+e.cost:e.src==="quest"?' · planned '+e.cost+', felt '+(e.felt||e.cost):' · from '+esc(e.src))+'</span></div>';}).join(""):'<p class="empty">Finished quests land here.</p>')+'</div></section>';
+}
+function render(){
+  $("who").textContent=Q.name?Q.name+"'s player sheet. Goals in, energy counted, skills tracked.":"Your real-life player sheet. Goals in, energy counted, skills tracked.";
+  document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.v===view));});
+  $("main").innerHTML='<div style="display:grid;gap:16px">'+(view==="today"?vToday():view==="plan"?vPlan():view==="sheet"?vSheet():vLog())+'</div>';
+  var w=$("q-w");if(w)w.onchange=function(){$("q-dwrap").hidden=w.value!=="date";if(w.value==="date"&&!$("q-d").value)$("q-d").value=addDays(today(),1);};
+  var f=$("qf");if(f)f.onsubmit=function(ev){ev.preventDefault();var t=$("q-t").value.trim();if(!t)return;var wv=$("q-w").value;
+    Q.quests.push({id:uid(),t:t,stat:$("q-s").value,cost:Number($("q-c").value),when:wv==="later"?"later":"day",day:wv==="date"?($("q-d").value||today()):(wv==="later"?null:today()),repeat:wv==="daily",done:false});save();render();toast("Quest added.");};
+  var ra=$("r-a");if(ra){$("r-s").value=RECH[0][1];ra.onchange=function(){$("r-s").value=RECH[Number(ra.value)][1];};
+    $("rf").onsubmit=function(ev){ev.preventDefault();var r=RECH[Number(ra.value)],g=Number($("r-g").value),st=$("r-s").value,t=$("r-t").value.trim()||r[0];
+      Q.log.push({id:uid(),date:today(),t:t,stat:st,cost:0,felt:0,gain:g,xp:g*5,src:"recharge"});save();render();toast("+"+g+" energy, +"+(g*5)+" "+statName(st)+" XP");};
+    $("sf").onsubmit=function(ev){ev.preventDefault();var t=$("s-t").value.trim();if(!t)return;var c=Number($("s-c").value),st=$("s-s").value;
+      Q.log.push({id:uid(),date:addDays(today(),Number($("s-d").value)),t:t,stat:st,cost:c,felt:c,xp:c*10,src:"quest",retro:true});save();render();toast("+"+(c*10)+" "+statName(st)+" XP");};}
+  var nm=$("nm");if(nm)nm.onchange=function(){Q.name=nm.value.trim();save();render();};
+  var ex=$("exp");if(ex)ex.onclick=function(){download("quest-ledger-"+today()+".json",Q);};
+  var im=$("imp");if(im){im.onclick=function(){$("impf").click();};$("impf").onchange=function(ev){var fl=ev.target.files[0];if(!fl)return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(!o||!Array.isArray(o.quests)||!Array.isArray(o.log))throw 0;lsSet("pls-quest",o);Q=questLoad();render();toast("Copy loaded.");}catch(e){toast("That file isn't a Quest Ledger copy.");}};r.readAsText(fl);};}
+}
+document.addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;var d=b.dataset;
+  if(d.v){view=d.v;feltFor=null;render();return;}
+  if(d.energy){Q.energy={date:today(),val:Number(d.energy)};save();render();return;}
+  if(d.reenergy){Q.energy={};save();render();return;}
+  if(d.done){feltFor=d.done;render();return;}
+  if(d.cancelfelt){feltFor=null;render();return;}
+  if(d.felt){var q=Q.quests.filter(function(x){return x.id===feltFor;})[0];if(!q)return;var xp=q.cost*10;
+    Q.log.push({id:uid(),date:today(),t:q.t,stat:q.stat,cost:q.cost,felt:Number(d.felt),xp:xp,src:"quest"});
+    if(q.repeat)q.last=today();else{q.done=true;q.doneOn=today();}
+    if(Q.log.length>3000)Q.log=Q.log.slice(-3000);feltFor=null;save();render();toast("+"+xp+" "+statName(q.stat)+" XP");return;}
+  if(d.tomorrow){var q2=Q.quests.filter(function(x){return x.id===d.tomorrow;})[0];if(q2){q2.day=addDays(today(),1);save();render();toast("Moved to tomorrow.");}return;}
+  if(d.pull){var q3=Q.quests.filter(function(x){return x.id===d.pull;})[0];if(q3){q3.when="day";q3.day=today();save();render();toast("On today.");}return;}
+  if(d.del){Q.quests=Q.quests.filter(function(x){return x.id!==d.del;});save();render();return;}
+});
+window.addEventListener("storage",function(e){if(e.key==="pls-quest"){Q=questLoad();render();}});
+render();
+</script>
+</body>
+</html>
