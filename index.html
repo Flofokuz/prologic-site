@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prologic Strategies</title>
+<title>Prologic Strategies by FloFokuz</title>
 <meta name="description" content="Prologic Strategies is a Bronx-based network for community development and business strategy. Find your floor. Choose your path. Build something that outlives you.">
 <meta property="og:title" content="Prologic Strategies">
 <meta property="og:description" content="Find your floor. Choose your path. Build something that outlives you.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Oswald:wght@200;300;400;500&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   /* Layout: one centered column; hero line, then what's live, what's coming, the five questions, and contact. Prologic suite palette: ink, gold, ember. */
@@ -74,34 +74,132 @@ h2{font-family:var(--font-display);font-size:1.7rem;margin:0 0 6px;text-wrap:bal
 footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
 @media (max-width:520px){ .realms li{grid-template-columns:1fr;gap:2px} }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+/* ---- old-site skin: black, green, yellow; thin Oswald, Playfair, heavy wordmark ---- */
+:root{--ink:#000;--panel:#0e0e0e;--line:#2b2b2b;--text:#fff;--muted:#d2d2d2;--gold:#fefc8f;--ember:#51bf57;--green:#51bf57;--yellow:#fefc8f;
+  --font-display:"Oswald","Arial Narrow",Impact,sans-serif;--font-serif:"Playfair Display",Georgia,serif;--font-body:"Helvetica Neue",Helvetica,Arial,sans-serif;--font-mark:"Archivo Black","Arial Black",Impact,sans-serif}
+.stage{position:relative;overflow:hidden}
+.stage{background:#000}
+.stage::before{content:"";position:absolute;left:0;right:0;top:0;height:76%;background:url(/assets/hero.jpg) center top/cover no-repeat}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.05) 20%,rgba(0,0,0,.22) 44%,rgba(0,0,0,.86) 67%,#000 76.5%)}
+.stage>.wrap{position:relative;z-index:1}
+header.top{border-bottom:0;padding:18px 0}
+.brand{font-family:var(--font-display);font-weight:300;font-size:1.15rem;letter-spacing:.14em}
+.brand span{color:var(--yellow)}
+.top small{color:#fff;font-family:var(--font-serif)}
+.hero{padding:clamp(240px,46vh,430px) 0 120px}
+.hero .mark{margin:0 0 22px;display:grid;justify-items:start;line-height:1;color:#fff;max-width:none;text-shadow:none}
+.mark .ps{font:200 clamp(2.5rem,9.5vw,5.6rem)/1.02 var(--font-display);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.14em;text-shadow:0 3px 14px rgba(0,0,0,.55)}
+.mark .by{font:200 clamp(1.6rem,5vw,3rem)/1.25 var(--font-display);padding-left:.12em}
+.mark .ff{font:400 clamp(2.6rem,13.2vw,7.9rem)/.95 var(--font-mark);letter-spacing:.01em;text-shadow:none;background:linear-gradient(180deg,#8fe893 0%,#51bf57 42%,#1c7427 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+.hero h1{font:300 clamp(1.5rem,4.2vw,2.3rem)/1.2 var(--font-display);letter-spacing:.01em;margin:0 0 14px;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.hero h1 em{color:var(--yellow)}
+.hero p{font-family:var(--font-serif);color:#fff;font-size:1.08rem;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.btn{font-family:var(--font-serif);font-weight:600;border:3px double var(--yellow);border-radius:10px;padding:11px 20px;transition:transform .15s ease,box-shadow .15s ease}
+.btn.solid{background:var(--yellow);color:#000;border-color:#000;box-shadow:0 0 0 2px var(--yellow)}
+.btn.ghost{background:rgba(0,0,0,.72);color:var(--yellow)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(81,191,87,.55)}
+.btn.solid:hover{box-shadow:0 0 0 2px var(--yellow),0 8px 0 rgba(81,191,87,.55)}
+.wave{position:absolute;z-index:1;left:0;bottom:-1px;width:200%;height:clamp(60px,10vw,110px);display:block}
+.wave .w1{fill:var(--green)}.wave .w2{fill:#000}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.wave{animation:drift 26s linear infinite}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.mark .ps{animation:rise .7s ease both}.mark .by{animation:rise .7s .12s ease both}.mark .ff{animation:rise .8s .24s ease both}
+section{border-top:0;padding:46px 0}
+h2{font:200 clamp(2.3rem,7.5vw,3.7rem)/1.05 var(--font-display);color:var(--green);text-shadow:0 4px 0 rgba(255,255,255,.07);margin:0 0 10px}
+.lead{font-family:var(--font-serif);color:#fff}
+.card{background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;transition:transform .15s ease,border-color .15s ease}
+.card:hover{transform:translateY(-3px);border-color:var(--yellow)}
+.card h3{font:400 1.45rem/1.15 var(--font-display);letter-spacing:.01em}
+.card a{font-family:var(--font-serif);font-weight:600}
+.tag.live{background:rgba(81,191,87,.18);color:#7be07f}.tag.soon{background:rgba(254,252,143,.14);color:var(--yellow)}
+.next{border-radius:15px;border-color:rgba(254,252,143,.38);border-left:6px solid var(--green)}
+.next .when{color:#7be07f}
+.pf{border-radius:15px;border-color:rgba(254,252,143,.38);border-left:6px solid var(--yellow)}
+.pf .quote{font-family:var(--font-serif)}
+.meet{display:grid;grid-template-columns:1fr minmax(160px,260px);gap:26px;align-items:center;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:26px;margin-top:8px}
+.meet h2{color:#fff;font-size:clamp(2rem,6vw,3.1rem)}
+.meet .role{font:300 1.15rem var(--font-display);margin:0 0 14px;color:var(--yellow)}
+.meet .say{font:600 1.25rem/1.4 var(--font-serif);margin:0 0 10px}
+.meet p{font-family:var(--font-serif);margin:0 0 10px}
+.meet img{width:100%;height:100%;max-height:440px;object-fit:cover;object-position:center 30%;border-radius:12px;border:3px double var(--yellow);display:block}
+@media (max-width:640px){.meet{grid-template-columns:1fr}.meet img{max-height:340px;order:-1}}
+section[aria-labelledby="h-realms"]{background:var(--green);color:#000;box-shadow:0 0 0 100vmax var(--green);clip-path:inset(0 -100vmax);margin:26px 0}
+section[aria-labelledby="h-realms"] h2{color:#000;text-shadow:none;font-weight:300}
+section[aria-labelledby="h-realms"] .lead{color:#000}
+.realms li{background:#000;border-color:#000;border-radius:12px;grid-template-columns:120px 1fr}
+.realms b{font:400 1.2rem var(--font-mark);text-transform:uppercase;letter-spacing:.03em;background:linear-gradient(180deg,#8fe893,#51bf57 55%,#2a8f35);-webkit-background-clip:text;background-clip:text;color:transparent}
+.social a{border-color:rgba(254,252,143,.38);font-family:var(--font-serif)}
+.social a:hover{background:var(--yellow);color:#000;border-color:var(--yellow)}
+footer{border-top:0;font-family:var(--font-serif)}
+@media (prefers-reduced-motion: reduce){.wave,.mark span{animation:none!important}}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:6px 18px;font:300 1.05rem var(--font-display);letter-spacing:.06em}
+.sitenav a{color:#fff;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.sitenav a:hover,.sitenav a[aria-current]{border-bottom-color:var(--yellow);color:var(--yellow)}
+.last{margin-top:14px;font-family:var(--font-serif)}
+.page-head{position:relative;background:#000;overflow:hidden;padding-bottom:clamp(70px,11vw,120px)}
+.page-head .title{padding:34px 0 10px;display:grid;gap:10px}
+.page-head h1{font:200 clamp(2.6rem,9vw,5rem)/1.02 var(--font-display);margin:0;color:#fff}
+.page-head h1 b{font:400 1em var(--font-mark);background:linear-gradient(180deg,#8fe893,#51bf57 45%,#1c7427);-webkit-background-clip:text;background-clip:text;color:transparent;display:block;line-height:1}
+.page-head p{font:1.15rem/1.5 var(--font-serif);margin:0;max-width:56ch}
+.split{display:grid;grid-template-columns:1fr minmax(150px,240px);gap:24px;align-items:center}
+.split img{width:100%;height:auto;display:block}
+@media (max-width:640px){.split{grid-template-columns:1fr}.split img{max-width:220px}}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:14px 18px;font-family:var(--font-serif)}
+.steps li::before{content:"0" counter(s);font:200 2.6rem/1 var(--font-display);color:var(--green)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.big{font:200 clamp(1.8rem,6vw,2.8rem)/1.1 var(--font-display);color:var(--yellow);margin:0}
+.quote2{font:600 clamp(1.3rem,4vw,1.8rem)/1.35 var(--font-serif);margin:0;border-left:6px solid var(--green);padding-left:18px}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.photos img{width:100%;height:320px;object-fit:cover;border-radius:12px;border:3px double var(--yellow);display:block}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="brand">PROLOGIC <span>STRATEGIES</span></div>
-    <small>Bronx, New York</small>
-  </header>
-
-  <div class="hero">
-    <h1>Find your floor. Choose your path. <em>Build something that outlives you.</em></h1>
-    <p>Prologic Strategies is a Bronx-based network for community development and business strategy. We help anyone, from any starting point, get from the idea to the dinner plate, with the receipts to prove it.</p>
-    <div class="btns">
-      <a class="btn solid" href="#contact">Stay in the loop</a>
-      <a class="btn ghost" href="https://youtube.com/playlist?list=PLm0_IP2xF3VaD_bKAubNlrRkJ6dVQIbje">Watch the podcast</a>
+<div class="stage">
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">PROLOGIC <span>STRATEGIES</span></div>
+      <nav class="sitenav" aria-label="Site"><a href="/">Home</a><a href="/show/">The show</a><a href="/about/">About</a><a href="/#tools">Free tools</a><a href="/#pullup">Pull up</a></nav>
+    </header>
+    <div class="hero">
+      <p class="mark"><span class="ps">Prologic Strategies</span><span class="by">by</span><span class="ff">FLOFOKUZ</span></p>
+      <h1>Find your floor. Choose your path. <em>Build something that outlives you.</em></h1>
+      <p>Prologic Strategies is a Bronx-based network for community development and business strategy. We help anyone, from any starting point, get from the idea to the dinner plate, with the receipts to prove it.</p>
+      <div class="btns">
+        <a class="btn solid" href="#contact">Stay in the loop</a>
+        <a class="btn ghost" href="https://youtube.com/playlist?list=PLm0_IP2xF3VaD_bKAubNlrRkJ6dVQIbje">Watch the podcast</a>
+      </div>
     </div>
   </div>
+  <svg class="wave" viewBox="0 0 2400 110" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 46 Q150 0 300 46 T600 46 T900 46 T1200 46 T1500 46 T1800 46 T2100 46 T2400 46 V110 H0Z"/><path class="w2" d="M0 76 Q150 34 300 76 T600 76 T900 76 T1200 76 T1500 76 T1800 76 T2100 76 T2400 76 V110 H0Z"/></svg>
+</div>
+<div class="wrap">
+  <section aria-labelledby="h-meet">
+    <div class="meet">
+      <div>
+        <h2 id="h-meet">Meet Prince Taylor, aka FloFokuz</h2>
+        <p class="role">CEO and Founder</p>
+        <p class="say">&ldquo;I Am Flo, and I Am Fokuz.&rdquo;</p>
+        <p>With over 20 years in the music industry and deep expertise in sales and leadership, I founded Prologic Strategies to inspire and equip individuals to thrive in competitive landscapes.</p>
+        <p>My vision drives Team A.L.I.V.E. and the Falcon Company of Mentors and curators, uniting creators and entrepreneurs in a movement for growth and resilience.</p>
+      </div>
+      <img src="/assets/portrait.jpg" alt="Prince Taylor, close up, wearing a knit cap" width="401" height="401">
+    </div>
+  </section>
 
   <section aria-labelledby="h-next">
     <h2 id="h-next">Next up</h2>
     <p class="lead">Come through, or catch it here afterward.</p>
     <div class="next">
-      <span class="when">Monday, November 9, 2026 · 6:00 to 7:30 PM</span>
-      <b>Xtra Hype Connection: Bite-Sized · Speak It Plain: Breaking Past Self-Imposed Limits</b>
-      <span>Ever open your mouth and say something so reckless that you messed up your own blessing right on the spot? Tonight we stop shooting ourselves in the foot. No more bad talk wrecking your game.</span>
-      <span>Boogie Down/Brick City Virtual Studio. Call or text <a href="tel:+15205258633">(520) 525-8633</a> to join.</span>
-      <span><a href="https://docs.google.com/document/d/19LqH08_YXMdxD0wG1UgbhPV20bJ5CW_NI3oBKD3MLdM/edit">Episode rundown, accessible document (opens Google Docs)</a></span>
+      <span class="when">Monday, November 16, 2026 &middot; doors at 5:50 PM Eastern</span>
+      <b>Xtra Hype Connection: Bite-Sized</b>
+      <span>The Monday show where the callers are the panel. Bring something you've got cooking and take five to ten minutes to unpack it.</span>
+      <span>Boogie Down/Brick City Virtual Studio. Call <a href="tel:+15205258633">(520) 525-8633</a> and press star 6 to talk.</span>
+      <span><a href="https://cal.com/flo-fokuz-yriw4c/xtra-hype-live">Save your seat</a> &middot; <a href="/show/">How the show works</a></span>
     </div>
+    <p class="last"><b>Last show, Friday, November 13:</b> Cooler Talk, &ldquo;The Pathfinders Blueprint: Speak with Purpose, Listen with Intent.&rdquo; <a href="https://www.youtube.com/watch?v=ec7iAEIRplI">Watch the replay</a></p>
   </section>
 
   <section aria-labelledby="h-live">
