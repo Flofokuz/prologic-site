@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow State Calculator · Prologic Strategies</title>
+<style>
+:root{--bg:#121417;--panel:#1b1e23;--raise:#23272e;--ink:#ece8df;--muted:#a09a8c;--line:#343a44;--gold:#d9a441;--green:#6fc283;--red:#e07a6a;--blue:#86a5e0}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--gold)}
+nav.top{background:#0c0e11;padding:10px 20px;font:600 13px/1.4 system-ui,sans-serif;display:flex;gap:18px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+nav.top a{color:var(--ink);text-decoration:none}nav.top a.brand{color:var(--gold);letter-spacing:.06em}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px;display:grid;gap:16px}
+h1{font-size:1.9rem;line-height:1.1;margin:0}h2{font-size:1.2rem;margin:0}h3{font-size:1rem;margin:0}
+.sub{color:var(--muted);margin:4px 0 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:600 1rem system-ui,sans-serif;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--raise);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#17130a;font-weight:600}
+.btn.sm{padding:5px 9px;font-size:.85rem}.btn:disabled{opacity:.5;cursor:default}
+input,select,textarea{font:16px system-ui,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+label.f{display:grid;gap:4px;font-size:.82rem;color:var(--muted);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:560px){.grid3{grid-template-columns:1fr 1fr}}
+.hint{color:var(--muted);font-size:.86rem;margin:0}
+.pill{display:inline-block;font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pill.gold{color:var(--gold);border-color:var(--gold)}.pill.red{color:var(--red);border-color:var(--red)}.pill.green{color:var(--green);border-color:var(--green)}
+.bar{height:10px;border-radius:6px;background:var(--bg);overflow:hidden;border:1px solid var(--line)}.bar i{display:block;height:100%;background:var(--gold)}
+.bar.over i{background:var(--red)}
+.list{display:grid;gap:8px}
+.item{background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
+.item .top{display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.item b{overflow-wrap:anywhere}
+.empty{color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:12px;margin:0}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:600;max-width:calc(100% - 32px)}
+[hidden]{display:none!important}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.q{display:grid;gap:8px}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.scale button{padding:10px 0}.scale button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#17130a;font-weight:700}
+.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">PROLOGIC STRATEGIES</a><a href="/#tools">Tools</a><a href="/os/">OS</a><a href="/#pullup">Pull up</a></nav>
+<div class="wrap">
+  <header>
+    <h1>Flow State Calculator</h1>
+    <p class="sub">Five quick reads on this moment. One clear next move.</p>
+  </header>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-v="check" aria-selected="true">Check in</button>
+    <button class="tab" role="tab" data-v="pattern" aria-selected="false">Pattern</button>
+  </div>
+  <main id="main"></main>
+  <section class="card"><h3>Yours to keep</h3><p class="hint">No account. Your check-ins stay on this device. Save a copy any time. You can save this page and run it offline, and the code is open to copy.</p></section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function pad(n){return String(n).padStart(2,"0");}
+function ymd(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function today(){return ymd(new Date());}
+function addDays(s,n){var p=s.split("-").map(Number),d=new Date(p[0],p[1]-1,p[2]);d.setDate(d.getDate()+n);return ymd(d);}
+function nice(s){var p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){toast("Couldn't save on this device.");return false;}}
+var toastT=null;function toast(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true;},2600);}
+function download(name,obj){var b=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);}
+var STATS=[["earn","Earn","Money in, bills handled"],["build","Build","Making and finishing things"],["kin","Kin","Family, friends, your people"],["shelter","Shelter","Home, food, the floor under you"],["body","Body","Health, movement, rest"],["mind","Mind","Learning and thinking"],["voice","Voice","Speaking up, creating, performing"],["trust","Trust","Promises kept, showing up"]];
+var RANKS=[[0,"Visitor"],[100,"Prairie"],[500,"Aplomado"],[1500,"Peregrine"],[4000,"Gyrfalcon"]];
+function rankOf(x){var r=RANKS[0],n=null;for(var i=0;i<RANKS.length;i++){if(x>=RANKS[i][0]){r=RANKS[i];n=RANKS[i+1]||null;}}return {name:r[1],next:n};}
+function lvl(x){return 1+Math.floor(Math.sqrt(x/40));}
+function questLoad(){var q=lsGet("pls-quest",null);if(!q||typeof q!=="object")q={};q.v=1;q.name=q.name||"";q.quests=Array.isArray(q.quests)?q.quests:[];q.log=Array.isArray(q.log)?q.log:[];q.claims=q.claims||{};q.energy=q.energy||{};return q;}
+function xpBy(q){var o={};STATS.forEach(function(s){o[s[0]]=0;});q.log.forEach(function(l){if(o[l.stat]!=null)o[l.stat]+=Number(l.xp)||0;});return o;}
+function flowLoad(){var f=lsGet("pls-flow",null);if(!f||!Array.isArray(f.checks))f={checks:[]};return f;}
+
+var REALMS=[["e","Earth","Your body right now","Worn out, tense","Rested, steady"],["w","Water","Your feelings right now","Heavy, stirred up","Settled, open"],["a","Air","Your head right now","Foggy, scattered","Clear, sharp"],["f","Fire","Your drive right now","No spark","Ready to move"],["v","Void","Your sense of yourself right now","Lost, cut off","Grounded, connected"]];
+var PATHS={
+ ground:["Ground","Earth is lowest. Start with the floor.","Drink water, eat something, or lie flat for five minutes. Then pick the lightest thing on your list.","Take on energy 1 or 2 quests only."],
+ release:["Release","Water is lowest. Something is knotted up.","Name the feeling out loud in one sentence. Then six slow breaths, out longer than in. Notice where in your body it sits.","Do a Body or Kin quest before anything that needs focus."],
+ clear:["Clear","Air is lowest. Too much in your head.","Write down everything that is circling, no order. Circle one. The rest can wait on the page.","Do one small Build quest to get a finish on the board."],
+ ignite:["Ignite","Fire is lowest. The spark is out.","Set a timer for five minutes and start the easiest piece of anything. Stop when it rings if you want to.","Pick a quest you can finish in ten minutes."],
+ reconnect:["Reconnect","Void is lowest. You have drifted from yourself.","Say what you are doing and who it is for. Text or call one person who knows you.","Do a Kin or Trust quest."],
+ flow:["Flow","Everything is at 4 or better. You are in it.","Protect the next hour. Phone away. Take on the heaviest thing you have been putting off.","This is the time for an energy 4 or 5 quest."]};
+var ORDER=["e","w","a","f","v"], KEY={e:"ground",w:"release",a:"clear",f:"ignite",v:"reconnect"};
+var F=flowLoad(), view="check", ans={}, result=null;
+function calc(a){var low=ORDER[0];ORDER.forEach(function(k){if(a[k]<a[low])low=k;});var all4=ORDER.every(function(k){return a[k]>=4;});
+  var path=all4?"flow":KEY[low], energy=Math.max(1,Math.min(10,Math.round((a.e+a.f)*0.7+(a.w+a.a+a.v)*0.2)));return {path:path,energy:energy};}
+function vCheck(){
+  var h='';
+  if(result){var p=PATHS[result.path];
+    h+='<section class="card"><div class="row"><h2>Your pathway: '+p[0]+'</h2><span class="pill gold">energy '+result.energy+' of 10</span></div><p style="margin:0">'+p[1]+'</p><div class="item"><b>Do this now</b><span>'+p[2]+'</span></div><div class="item"><b>Then</b><span>'+p[3]+' <a href="/quest/">Open Quest Ledger</a></span></div>'+
+    '<label class="f">One line about this moment (optional)<input id="note" maxlength="160" placeholder="What set this off, or what helped"></label><div class="row"><button class="btn gold" id="again">Check in again</button><span class="hint">Saved on this device.</span></div></section>';}
+  else{h+='<section class="card"><p class="hint">Answer from your gut. 1 is the low end, 5 is the high end.</p>';
+    REALMS.forEach(function(r){h+='<div class="q"><h3>'+r[1]+' · '+r[2]+'</h3><div class="scale">'+[1,2,3,4,5].map(function(n){return '<button class="btn" data-k="'+r[0]+'" data-n="'+n+'" aria-pressed="'+(ans[r[0]]===n)+'">'+n+'</button>';}).join("")+'</div><div class="ends"><span>'+r[3]+'</span><span>'+r[4]+'</span></div></div>';});
+    h+='<button class="btn gold" id="go" '+(ORDER.every(function(k){return ans[k];})?'':'disabled')+'>Show my pathway</button></section>';}
+  h+='<section class="card"><p class="hint">This is a self-check, not medical or mental health care. If you are in crisis or feel unsafe, reach out to a professional or a crisis line.</p></section>';
+  return h;
+}
+function vPattern(){
+  var c=F.checks;if(!c.length)return '<section class="card"><p class="empty">Check in a few times and your pattern shows up here.</p></section>';
+  var last=c.slice(-30), h='<section class="card"><h2>Last '+last.length+' check-ins</h2>';
+  REALMS.forEach(function(r){var m=last.reduce(function(a,x){return a+x[r[0]];},0)/last.length;h+='<div><div class="row"><b>'+r[1]+'</b><span class="pill">'+m.toFixed(1)+' of 5</span></div><div class="bar"><i style="width:'+Math.round(m/5*100)+'%"></i></div></div>';});
+  var cnt={};last.forEach(function(x){cnt[x.path]=(cnt[x.path]||0)+1;});var top=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a];})[0];
+  h+='<p style="margin:0">You land on <b>'+PATHS[top][0]+'</b> most often ('+cnt[top]+' of '+last.length+'). '+(top==="flow"?'Notice what those moments have in common.':'That realm is where a little steady care pays off most.')+'</p></section><section class="card"><h2>History</h2><div class="list">'+
+  c.slice().reverse().slice(0,40).map(function(x){var d=new Date(x.at);return '<div class="item"><div class="top"><b>'+PATHS[x.path][0]+'</b><span class="hint">'+d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+' '+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})+'</span></div><span class="hint">E'+x.e+' W'+x.w+' A'+x.a+' F'+x.f+' V'+x.v+' · energy '+x.energy+(x.note?' · '+esc(x.note):'')+'</span></div>';}).join("")+
+  '</div><div class="row"><button class="btn" id="exp">Save a copy</button></div></section>';
+  return h;
+}
+function render(){
+  document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.v===view));});
+  $("main").innerHTML='<div style="display:grid;gap:16px">'+(view==="check"?vCheck():vPattern())+'</div>';
+  var n=$("note");if(n)n.onchange=function(){var l=F.checks[F.checks.length-1];if(l){l.note=n.value.trim();lsSet("pls-flow",F);toast("Noted.");}};
+  var ex=$("exp");if(ex)ex.onclick=function(){download("flow-checks-"+today()+".json",F);};
+}
+document.addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;var d=b.dataset;
+  if(d.v){view=d.v;render();return;}
+  if(d.k){ans[d.k]=Number(d.n);render();return;}
+  if(b.id==="go"){var r=calc(ans);F.checks.push({at:Date.now(),e:ans.e,w:ans.w,a:ans.a,f:ans.f,v:ans.v,path:r.path,energy:r.energy,note:""});if(F.checks.length>2000)F.checks=F.checks.slice(-2000);lsSet("pls-flow",F);result=r;render();window.scrollTo(0,0);return;}
+  if(b.id==="again"){ans={};result=null;render();return;}
+});
+render();
+</script>
+</body>
+</html>
