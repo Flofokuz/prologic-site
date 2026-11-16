@@ -169,6 +169,7 @@ html{scroll-padding-top:86px}
 .topbar .brand .bt{color:#fff}
 .topbar .brand .bt span{color:var(--yellow)}
 .sitenav a.hire{color:var(--green)}
+.sitenav a.qlink{color:#e8c77a}
 @media (max-width:760px){
   .topbar header.top{flex-wrap:wrap;gap:0 12px;padding:8px 0 4px}
   .topbar .sitenav{flex-wrap:nowrap;overflow-x:auto;width:100%;gap:14px;font-size:.98rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -188,13 +189,21 @@ html{scroll-padding-top:86px}
 .hire-box ol{margin:0;padding-left:1.2em;font-family:var(--font-serif)}
 .hire-box ol li{margin:2px 0}
 .hire-box p{margin:0;font-family:var(--font-serif)}
+
+.qstrip{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;margin:4px 0 0;padding:14px 18px;border-radius:6px;text-decoration:none;color:#2a1d0c;background:linear-gradient(180deg,#f3e3bd,#e6cf98);box-shadow:inset 0 0 0 1px #b8955a,inset 0 0 28px rgba(120,80,30,.35),0 6px 18px rgba(0,0,0,.45);font-family:var(--font-serif)}
+.qstrip b{display:block;font:400 1.25rem/1.1 var(--font-mark);letter-spacing:.02em;color:#3b2408}
+.qstrip small{display:block;font-size:.98rem;color:#4a3518}
+.qstrip .seal{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#d24a3a,#8f1d14 70%);color:#f7dfb0;font-size:1.3rem;box-shadow:0 2px 0 #5c0f09}
+.qstrip .go{font-weight:600;color:#7a1c12;white-space:nowrap}
+.qstrip:hover{transform:translateY(-2px)}
+@media (max-width:560px){.qstrip{grid-template-columns:auto 1fr}.qstrip .go{grid-column:2}}
 </style>
 </head>
 <body>
 <div class="topbar"><div class="wrap">
     <header class="top">
       <div class="brand"><a href="/"><img src="/assets/falcon-64.png" alt="" width="30" height="30"><span class="bt">PROLOGIC <span>STRATEGIES</span></span></a></div>
-      <nav class="sitenav" aria-label="Site"><a href="/" aria-current="page">Home</a><a href="/show/">The show</a><a href="/about/">About</a><a href="/#tools">Free tools</a><a href="/GroundLevel/" class="hire">Join the team</a><a href="/#pullup">Pull up</a></nav>
+      <nav class="sitenav" aria-label="Site"><a href="/" aria-current="page">Home</a><a href="/show/">The show</a><a href="/about/">About</a><a href="/#tools">Free tools</a><a href="/quests/" class="qlink">Quest Board</a><a href="/GroundLevel/" class="hire">Join the team</a><a href="/#pullup">Pull up</a></nav>
     </header>
 </div></div>
 
@@ -240,6 +249,9 @@ html{scroll-padding-top:86px}
     <p class="last"><b>Last show, Friday, November 13:</b> Cooler Talk, &ldquo;The Pathfinders Blueprint: Speak with Purpose, Listen with Intent.&rdquo; <a href="https://www.youtube.com/watch?v=ec7iAEIRplI">Watch the replay</a></p>
   </section>
 
+  <section aria-label="Quest board" style="padding-top:6px">
+  <a class="qstrip" href="/quests/"><span class="seal">&#9876;</span><span><b>The Quest Board</b><small>6 open quests: bill checks, a seat on the show, strategy sessions, jobs and more</small></span><span class="go">Read the board &rarr;</span></a>
+  </section>
   <section aria-labelledby="h-hire">
     <div class="hire-box">
       <span class="tag live">Now hiring</span>
