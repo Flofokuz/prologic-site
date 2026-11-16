@@ -173,6 +173,26 @@ html{scroll-padding-top:86px}
   .topbar .sitenav::-webkit-scrollbar{display:none}
   .topbar .sitenav a{white-space:nowrap}
 }
+
+/* ---- Flo / Fokuz mirror banner behind the title ---- */
+.page-head{--bh:clamp(330px,56vw,1080px)}
+.page-head::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--bh);background:url(/assets/about-banner.webp) center top/cover no-repeat}
+.page-head::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.15) 0,rgba(0,0,0,0) calc(var(--bh)*.18),rgba(0,0,0,0) calc(var(--bh)*.5),rgba(0,0,0,.82) calc(var(--bh)*.8),#000 calc(var(--bh)*.98))}
+.page-head>.wrap{position:relative;z-index:1}
+.page-head .wave{z-index:2}
+.page-head .title{padding-top:calc(var(--bh)*.58)}
+.amark{margin:0 0 6px;display:grid;justify-items:start;line-height:1;color:#fff}
+.amark .ps{font:200 clamp(2.2rem,7vw,4.2rem)/1.02 var(--font-display);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.14em;text-shadow:0 3px 14px rgba(0,0,0,.85),0 0 2px #000}
+.amark .ff{font:400 clamp(2.6rem,12vw,7.4rem)/.95 var(--font-mark);background:linear-gradient(180deg,#8fe893 0%,#51bf57 42%,#1c7427 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+.page-head p{text-shadow:0 1px 8px #000}
+/* ---- lore section ---- */
+.lore-box{background:var(--panel);border:1px solid rgba(254,252,143,.38);border-left:6px solid var(--green);border-radius:15px;padding:24px;display:grid;gap:14px;font-family:var(--font-serif)}
+.lore-box p{margin:0;font-size:1.08rem;line-height:1.6}
+.lore-box .dm{font:600 clamp(1.25rem,3.6vw,1.6rem)/1.35 var(--font-serif);color:var(--yellow)}
+.cycle{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.cycle li{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:baseline;background:#000;border:1px solid #2b2b2b;border-radius:12px;padding:12px 16px}
+.cycle b{font:400 1.15rem var(--font-mark);text-transform:uppercase;letter-spacing:.03em;background:linear-gradient(180deg,#8fe893,#51bf57 55%,#2a8f35);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (max-width:520px){.cycle li{grid-template-columns:1fr;gap:2px}}
 </style>
 </head>
 <body>
@@ -186,7 +206,7 @@ html{scroll-padding-top:86px}
 <div class="page-head">
   <div class="wrap">
     <div class="title">
-      <h1>Meet <b>FLOFOKUZ</b></h1>
+      <h1 class="amark"><span class="ps">Meet</span><span class="ff">FLOFOKUZ</span></h1>
       <p>Prince Taylor. CEO and Founder of Prologic Strategies. Hip Hop artist, organizer and co-host of the Xtra Hype Connection.</p>
     </div>
   </div>
@@ -200,6 +220,25 @@ html{scroll-padding-top:86px}
       <img src="/assets/hero.jpg" alt="Prince Taylor in a fedora and glasses">
       <img src="/assets/portrait.jpg" alt="Prince Taylor, close up">
       <img src="/assets/smile.jpg" alt="Prince Taylor smiling">
+    </div>
+  </section>
+
+  <section aria-labelledby="h-dm">
+    <h2 id="h-dm">The Dungeon Master</h2>
+    <div class="lore-box">
+      <p class="dm">Life is the playing board, and I'm the dungeon master.</p>
+      <p>Most of us are already halfway through the maze before anybody hands us a light. Then you strike a torch, and the flash shows you what's been around you the whole time: the pitfalls, the traps, the pressure closing in. That moment is scary. It's also the first moment you can do something about it.</p>
+      <p>That's what my tools are made for. They help you navigate the darkness, trace the pitfalls, see the traps coming and survive the pressures of the world we find ourselves in. With the tools, your gear and your own talents, we take on the trials we set ourselves up to conquer.</p>
+      <p>Maybe we came here to do a job or finish a task, maybe not. Either way, the work looks like this, and you go around as many times as it takes:</p>
+      <ul class="cycle">
+        <li><b>Earth</b><span>Sift through the dust, dirt and ashes of your life. Find the sediment solid enough to build a foundation on.</span></li>
+        <li><b>Water</b><span>Cleanse it and mold it into a shape that serves you.</span></li>
+        <li><b>Air</b><span>Let it dry and harden. Give it time and outside eyes.</span></li>
+        <li><b>Fire</b><span>Put it through the furnace so the new form holds under pressure.</span></li>
+        <li><b>Void</b><span>Carry what you became into the next round. Then go around again.</span></li>
+      </ul>
+      <p>Every cycle, you find the function. Then you give it form. Form follows function.</p>
+      <div class="btns"><a class="btn solid" href="/#tools">Pick up your tools</a><a class="btn ghost" href="/GroundLevel/">Start at Ground Level</a></div>
     </div>
   </section>
 
