@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Quest Board · Prologic Strategies</title>
+<meta name="description" content="The Quest Board: free bill checks, a seat on the show, strategy sessions, tech help, street team jobs and food delivery for Medicaid members. Book a time or reach FloFokuz now.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Oswald:wght@200;300;400;500&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one centered column; hero line, then what's live, what's coming, the five questions, and contact. Prologic suite palette: ink, gold, ember. */
+  --ink:#121417;
+  --panel:#1b1e23;
+  --line:#2c3038;
+  --text:#ece8df;
+  --muted:#a9a59c;
+  --gold:#d9a441;
+  --ember:#d4572a;
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ink);color:var(--text);font:17px/1.6 var(--font-body)}
+a{color:var(--gold)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-weight:700;letter-spacing:.06em;font-size:1.05rem}
+.brand span{color:var(--gold)}
+.top small{color:var(--muted)}
+.hero{padding:64px 0 44px}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.1rem,6vw,3.4rem);line-height:1.08;margin:0 0 18px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{max-width:60ch;color:var(--muted);margin:0 0 26px;font-size:1.1rem}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--gold)}
+.btn.solid{background:var(--gold);color:var(--ink)}
+.btn.ghost{color:var(--gold)}
+section{padding:36px 0;border-top:1px solid var(--line)}
+h2{font-family:var(--font-display);font-size:1.7rem;margin:0 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 20px;max-width:62ch}
+.next{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--ember);border-radius:12px;padding:16px 18px;display:grid;gap:4px}
+.next b{font-variant-numeric:tabular-nums}
+.next .when{color:var(--ember);font-weight:600;font-size:.9rem;letter-spacing:.04em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:8px;align-content:start}
+.card h3{margin:0;font-size:1.1rem}
+.card p{margin:0;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;justify-self:start}
+.tag.live{background:rgba(217,164,65,.15);color:var(--gold)}
+.tag.soon{background:rgba(212,87,42,.14);color:var(--ember)}
+.realms{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.realms li{display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.realms b{font-family:var(--font-display);color:var(--gold);font-size:1.15rem}
+.realms span{color:var(--text)}
+.contact{display:grid;gap:12px;max-width:520px}
+.contact .row{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.contact .row small{display:block;color:var(--muted);font-size:.85rem}
+.contact .row a,.contact .row strong{font-size:1.1rem;font-weight:600;font-variant-numeric:tabular-nums}
+.pf{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:20px;display:grid;gap:14px}
+.pf .quote{font-family:var(--font-display);font-size:1.25rem;line-height:1.35;margin:0;color:var(--text)}
+.pf ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.pf ul li::marker{color:var(--gold)}
+.pf small{color:var(--muted)}
+.social{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.social a{display:inline-block;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);text-decoration:none;font-weight:500}
+.social a:hover{border-color:var(--gold);color:var(--gold)}
+footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+@media (max-width:520px){ .realms li{grid-template-columns:1fr;gap:2px} }
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+/* ---- old-site skin: black, green, yellow; thin Oswald, Playfair, heavy wordmark ---- */
+:root{--ink:#000;--panel:#0e0e0e;--line:#2b2b2b;--text:#fff;--muted:#d2d2d2;--gold:#fefc8f;--ember:#51bf57;--green:#51bf57;--yellow:#fefc8f;
+  --font-display:"Oswald","Arial Narrow",Impact,sans-serif;--font-serif:"Playfair Display",Georgia,serif;--font-body:"Helvetica Neue",Helvetica,Arial,sans-serif;--font-mark:"Archivo Black","Arial Black",Impact,sans-serif}
+.stage{position:relative;overflow:hidden}
+.stage{background:#000}
+.stage::before{content:"";position:absolute;left:0;right:0;top:0;height:76%;background:url(/assets/hero.jpg) center top/cover no-repeat}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.05) 20%,rgba(0,0,0,.22) 44%,rgba(0,0,0,.86) 67%,#000 76.5%)}
+.stage>.wrap{position:relative;z-index:1}
+header.top{border-bottom:0;padding:18px 0}
+.brand{font-family:var(--font-display);font-weight:300;font-size:1.15rem;letter-spacing:.14em}
+.brand span{color:var(--yellow)}
+.top small{color:#fff;font-family:var(--font-serif)}
+.hero{padding:clamp(240px,46vh,430px) 0 120px}
+.hero .mark{margin:0 0 22px;display:grid;justify-items:start;line-height:1;color:#fff;max-width:none;text-shadow:none}
+.mark .ps{font:200 clamp(2.5rem,9.5vw,5.6rem)/1.02 var(--font-display);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.14em;text-shadow:0 3px 14px rgba(0,0,0,.55)}
+.mark .by{font:200 clamp(1.6rem,5vw,3rem)/1.25 var(--font-display);padding-left:.12em}
+.mark .ff{font:400 clamp(2.6rem,13.2vw,7.9rem)/.95 var(--font-mark);letter-spacing:.01em;text-shadow:none;background:linear-gradient(180deg,#8fe893 0%,#51bf57 42%,#1c7427 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+.hero h1{font:300 clamp(1.5rem,4.2vw,2.3rem)/1.2 var(--font-display);letter-spacing:.01em;margin:0 0 14px;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.hero h1 em{color:var(--yellow)}
+.hero p{font-family:var(--font-serif);color:#fff;font-size:1.08rem;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.btn{font-family:var(--font-serif);font-weight:600;border:3px double var(--yellow);border-radius:10px;padding:11px 20px;transition:transform .15s ease,box-shadow .15s ease}
+.btn.solid{background:var(--yellow);color:#000;border-color:#000;box-shadow:0 0 0 2px var(--yellow)}
+.btn.ghost{background:rgba(0,0,0,.72);color:var(--yellow)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(81,191,87,.55)}
+.btn.solid:hover{box-shadow:0 0 0 2px var(--yellow),0 8px 0 rgba(81,191,87,.55)}
+.wave{position:absolute;z-index:1;left:0;bottom:-1px;width:200%;height:clamp(60px,10vw,110px);display:block}
+.wave .w1{fill:var(--green)}.wave .w2{fill:#000}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.wave{animation:drift 26s linear infinite}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.mark .ps{animation:rise .7s ease both}.mark .by{animation:rise .7s .12s ease both}.mark .ff{animation:rise .8s .24s ease both}
+section{border-top:0;padding:46px 0}
+h2{font:200 clamp(2.3rem,7.5vw,3.7rem)/1.05 var(--font-display);color:var(--green);text-shadow:0 4px 0 rgba(255,255,255,.07);margin:0 0 10px}
+.lead{font-family:var(--font-serif);color:#fff}
+.card{background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;transition:transform .15s ease,border-color .15s ease}
+.card:hover{transform:translateY(-3px);border-color:var(--yellow)}
+.card h3{font:400 1.45rem/1.15 var(--font-display);letter-spacing:.01em}
+.card a{font-family:var(--font-serif);font-weight:600}
+.tag.live{background:rgba(81,191,87,.18);color:#7be07f}.tag.soon{background:rgba(254,252,143,.14);color:var(--yellow)}
+.next{border-radius:15px;border-color:rgba(254,252,143,.38);border-left:6px solid var(--green)}
+.next .when{color:#7be07f}
+.pf{border-radius:15px;border-color:rgba(254,252,143,.38);border-left:6px solid var(--yellow)}
+.pf .quote{font-family:var(--font-serif)}
+.meet{display:grid;grid-template-columns:1fr minmax(160px,260px);gap:26px;align-items:center;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:26px;margin-top:8px}
+.meet h2{color:#fff;font-size:clamp(2rem,6vw,3.1rem)}
+.meet .role{font:300 1.15rem var(--font-display);margin:0 0 14px;color:var(--yellow)}
+.meet .say{font:600 1.25rem/1.4 var(--font-serif);margin:0 0 10px}
+.meet p{font-family:var(--font-serif);margin:0 0 10px}
+.meet img{width:100%;height:100%;max-height:440px;object-fit:cover;object-position:center 30%;border-radius:12px;border:3px double var(--yellow);display:block}
+@media (max-width:640px){.meet{grid-template-columns:1fr}.meet img{max-height:340px;order:-1}}
+section[aria-labelledby="h-realms"]{background:var(--green);color:#000;box-shadow:0 0 0 100vmax var(--green);clip-path:inset(0 -100vmax);margin:26px 0}
+section[aria-labelledby="h-realms"] h2{color:#000;text-shadow:none;font-weight:300}
+section[aria-labelledby="h-realms"] .lead{color:#000}
+.realms li{background:#000;border-color:#000;border-radius:12px;grid-template-columns:120px 1fr}
+.realms b{font:400 1.2rem var(--font-mark);text-transform:uppercase;letter-spacing:.03em;background:linear-gradient(180deg,#8fe893,#51bf57 55%,#2a8f35);-webkit-background-clip:text;background-clip:text;color:transparent}
+.social a{border-color:rgba(254,252,143,.38);font-family:var(--font-serif)}
+.social a:hover{background:var(--yellow);color:#000;border-color:var(--yellow)}
+footer{border-top:0;font-family:var(--font-serif)}
+@media (prefers-reduced-motion: reduce){.wave,.mark span{animation:none!important}}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:6px 18px;font:300 1.05rem var(--font-display);letter-spacing:.06em}
+.sitenav a{color:#fff;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.sitenav a:hover,.sitenav a[aria-current]{border-bottom-color:var(--yellow);color:var(--yellow)}
+.last{margin-top:14px;font-family:var(--font-serif)}
+.page-head{position:relative;background:#000;overflow:hidden;padding-bottom:clamp(70px,11vw,120px)}
+.page-head .title{padding:34px 0 10px;display:grid;gap:10px}
+.page-head h1{font:200 clamp(2.6rem,9vw,5rem)/1.02 var(--font-display);margin:0;color:#fff}
+.page-head h1 b{font:400 1em var(--font-mark);background:linear-gradient(180deg,#8fe893,#51bf57 45%,#1c7427);-webkit-background-clip:text;background-clip:text;color:transparent;display:block;line-height:1}
+.page-head p{font:1.15rem/1.5 var(--font-serif);margin:0;max-width:56ch}
+.split{display:grid;grid-template-columns:1fr minmax(150px,240px);gap:24px;align-items:center}
+.split img{width:100%;height:auto;display:block}
+@media (max-width:640px){.split{grid-template-columns:1fr}.split img{max-width:220px}}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:14px 18px;font-family:var(--font-serif)}
+.steps li::before{content:"0" counter(s);font:200 2.6rem/1 var(--font-display);color:var(--green)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.big{font:200 clamp(1.8rem,6vw,2.8rem)/1.1 var(--font-display);color:var(--yellow);margin:0}
+.quote2{font:600 clamp(1.3rem,4vw,1.8rem)/1.35 var(--font-serif);margin:0;border-left:6px solid var(--green);padding-left:18px}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.photos img{width:100%;height:320px;object-fit:cover;border-radius:12px;border:3px double var(--yellow);display:block}
+
+/* ---- sticky top bar (follows the visitor as they scroll) ---- */
+html{scroll-padding-top:86px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(0,0,0,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:2px solid var(--green)}
+.topbar header.top{padding:10px 0;border-bottom:0;flex-wrap:nowrap}
+.topbar .brand{white-space:nowrap}
+.topbar .brand a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:9px}
+.topbar .brand img{width:30px;height:30px;border-radius:50%;display:block}
+.topbar .brand .bt{color:#fff}
+.topbar .brand .bt span{color:var(--yellow)}
+.sitenav a.hire{color:var(--green)}
+.sitenav a.qlink{color:#e8c77a}
+@media (max-width:760px){
+  .topbar header.top{flex-wrap:wrap;gap:0 12px;padding:8px 0 4px}
+  .topbar .sitenav{flex-wrap:nowrap;overflow-x:auto;width:100%;gap:14px;font-size:.98rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .topbar .sitenav::-webkit-scrollbar{display:none}
+  .topbar .sitenav a{white-space:nowrap}
+}
+
+
+.page-head.parch{background:#000}
+.page-head.parch .title{padding:28px 0 4px}
+.qlead{font:1.12rem/1.6 var(--font-serif);max-width:62ch;margin:0}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:8px}
+.quest{position:relative;padding:26px 22px 20px;color:#2a1d0c;border-radius:4px;background:linear-gradient(180deg,#f3e3bd 0%,#ead6a4 55%,#dfc488 100%);box-shadow:inset 0 0 0 1px #b8955a,inset 0 0 40px rgba(120,80,30,.38),0 10px 22px rgba(0,0,0,.55);font-family:var(--font-serif);display:grid;gap:10px;align-content:start}
+.quest:nth-child(odd){transform:rotate(-.6deg)}.quest:nth-child(even){transform:rotate(.5deg)}
+.quest::before{content:"";position:absolute;top:-9px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d24a3a,#8f1d14 70%);box-shadow:0 2px 0 #5c0f09}
+.quest .lore{font:400 clamp(1.3rem,3.2vw,1.55rem)/1.1 var(--font-mark);color:#3b2408;margin:0;letter-spacing:.01em}
+.quest .real{font:600 .82rem/1 var(--font-display);text-transform:uppercase;letter-spacing:.14em;color:#7a1c12;margin:0}
+.quest p{margin:0;font-size:1.02rem;line-height:1.5}
+.quest dl{margin:2px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.96rem;border-top:1px dashed #a07c45;padding-top:10px}
+.quest dt{font-weight:600;color:#5a3c14}.quest dd{margin:0}
+.quest .btns{margin-top:6px;display:flex;flex-wrap:wrap;gap:10px}
+.quest .btn{font-size:.98rem;padding:9px 16px}
+.quest .btn.solid{background:#7a1c12;color:#f7e6c0;border:2px solid #4d0f09;box-shadow:none}
+.quest .btn.ghost{background:transparent;color:#3b2408;border:2px solid #7a5a2a}
+.quest .btn:hover{box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.now{margin-top:26px;display:grid;gap:10px;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-left:6px solid var(--green);border-radius:15px;padding:22px;font-family:var(--font-serif)}
+.now p{margin:0}
+.amark{margin:0 0 6px;display:grid;justify-items:start;line-height:1;color:#fff}
+.amark .ps{font:200 clamp(2rem,6vw,3.6rem)/1.02 var(--font-display);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.14em}
+.amark .ff{font:400 clamp(2.4rem,9vw,6rem)/.98 var(--font-mark);background:linear-gradient(180deg,#f6e2ad 0%,#e0b860 50%,#a8762a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+    <header class="top">
+      <div class="brand"><a href="/"><img src="/assets/falcon-64.png" alt="" width="30" height="30"><span class="bt">PROLOGIC <span>STRATEGIES</span></span></a></div>
+      <nav class="sitenav" aria-label="Site"><a href="/">Home</a><a href="/show/">The show</a><a href="/about/">About</a><a href="/#tools">Free tools</a><a href="/quests/" class="qlink" aria-current="page">Quest Board</a><a href="/GroundLevel/" class="hire">Join the team</a><a href="/#pullup">Pull up</a></nav>
+    </header>
+</div></div>
+<div class="page-head parch">
+  <div class="wrap">
+    <div class="title">
+      <h1 class="amark"><span class="ps">The</span><span class="ff">QUEST BOARD</span></h1>
+      <p class="qlead">Every guild hall has a board where the work gets posted. These are the real things I can do with you, right now, in the real world. Pick one. Book a time, or if you are ready this minute, hit me up and we start today.</p>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 2400 110" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 46 Q150 0 300 46 T600 46 T900 46 T1200 46 T1500 46 T1800 46 T2100 46 T2400 46 V110 H0Z"/><path class="w2" d="M0 76 Q150 34 300 76 T600 76 T900 76 T1200 76 T1500 76 T1800 76 T2100 76 T2400 76 V110 H0Z"/></svg>
+</div>
+<div class="wrap">
+  <section aria-label="Open quests">
+    <div class="board">
+      <article class="quest"><p class="real">Free bill check</p><h3 class="lore">The Toll Collector</h3><p>Find out if you are overpaying for home internet or your phone line. I look over your bill with you, side by side, and show you what a better deal would look like.</p><dl><dt>Time</dt><dd>30 minutes</dd><dt>Where</dt><dd>Phone, video or in person</dd><dt>Reward</dt><dd>2 months of home internet on us, plus a TV or up to $250 in gift cards with select new plans</dd></dl><div class="btns"><a class="btn ghost" href="/internet/">Read the full offer</a><a class="btn solid" href="https://cal.com/flo-fokuz-yriw4c/free-telecom-audit">Book a time</a></div></article>
+      <article class="quest"><p class="real">Join the street team</p><h3 class="lore">The Ground Floor Oath</h3><p>Entry-level, commission-based sales. Shadow me for a day in your area or mine, then learn the trade side by side.</p><dl><dt>Time</dt><dd>One shadow day to start</dd><dt>Where</dt><dd>A spot you choose</dd><dt>Reward</dt><dd>A trade that pays you for your people skills</dd></dl><div class="btns"><a class="btn ghost" href="/GroundLevel/">See the path</a><a class="btn solid" href="https://cal.com/flo-fokuz-yriw4c/street-team">Book your shadow day</a></div></article>
+      <article class="quest"><p class="real">A spot on the show</p><h3 class="lore">The Round Table Seat</h3><p>Pull up on the Xtra Hype Connection live call-in show, Mondays and Fridays at 6pm. Bring something you are working on and talk it through with us.</p><dl><dt>Time</dt><dd>5 to 10 minutes on air</dd><dt>Where</dt><dd>By phone, (520) 525-8633, press star 6</dd><dt>Reward</dt><dd>Real feedback and a room full of ears</dd></dl><div class="btns"><a class="btn ghost" href="/show/">How the show works</a><a class="btn solid" href="https://cal.com/flo-fokuz-yriw4c/xtra-hype-live">Save your seat</a></div></article>
+      <article class="quest"><p class="real">Strategy session</p><h3 class="lore">The Strategist's Map</h3><p>Bring your idea, your business or your next move. We map it out together and you leave with clear next steps.</p><dl><dt>Time</dt><dd>Set when you book</dd><dt>Where</dt><dd>Phone, video or in person</dd><dt>Reward</dt><dd>A plan you can act on this week</dd></dl><div class="btns"><a class="btn solid" href="https://cal.com/flo-fokuz-yriw4c/strategy-consult">Book a session</a></div></article>
+      <article class="quest"><p class="real">Phone and tablet help</p><h3 class="lore">The Tinker's Bench</h3><p>Stuck on a phone, tablet or app? Show me what is going on and we fix it, or I walk you through it step by step.</p><dl><dt>Time</dt><dd>Set when you book</dd><dt>Where</dt><dd>Phone, video or in person</dd><dt>Reward</dt><dd>A device that works for you again</dd></dl><div class="btns"><a class="btn solid" href="https://cal.com/flo-fokuz-yriw4c/tech-help">Book tech help</a></div></article>
+      <article class="quest"><p class="real">Food delivery for Medicaid members</p><h3 class="lore">The Provisioner's Pact</h3><p>If you have Medicaid, you may qualify for food delivered to your door. No appointment needed: you just sign up. If the form gives you trouble, I will help you fill it out.</p><dl><dt>Time</dt><dd>A few minutes to sign up</dd><dt>Where</dt><dd>Online</dd><dt>Reward</dt><dd>Groceries brought to you</dd></dl><div class="btns"><a class="btn ghost" href="https://cal.com/flo-fokuz-yriw4c/tech-help">Get help signing up</a></div></article>
+    </div>
+    <div class="now">
+      <p><b>Ready right now?</b> Call or text me at <a href="tel:+13475418581">(347) 541-8581</a>. If I am on the block or on the air, leave a message or book a time and I will get back to you.</p>
+      <div class="btns"><a class="btn solid" href="tel:+13475418581">Call now</a><a class="btn ghost" href="sms:+13475418581">Text me</a><a class="btn ghost" href="/#pullup">Send a message</a></div>
+    </div>
+  </section>
+
+  <footer>&copy; 2026 Prologic Strategies LLC &middot; Bronx, New York &middot; <a href="mailto:prologicstrategies@gmail.com">prologicstrategies@gmail.com</a></footer>
+</div>
+</body>
+</html>
