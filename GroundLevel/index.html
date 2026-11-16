@@ -190,6 +190,27 @@ html{scroll-padding-top:86px}
   .topbar .sitenav::-webkit-scrollbar{display:none}
   .topbar .sitenav a{white-space:nowrap}
 }
+
+/* ---- Ground Level corner banner behind the title ---- */
+.page-head{--bh:clamp(330px,56vw,1080px)}
+.page-head::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--bh);background:url(/assets/gl-banner.webp) center top/cover no-repeat}
+.page-head::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.15) 0,rgba(0,0,0,0) calc(var(--bh)*.18),rgba(0,0,0,0) calc(var(--bh)*.5),rgba(0,0,0,.82) calc(var(--bh)*.8),#000 calc(var(--bh)*.98))}
+.page-head>.wrap{position:relative;z-index:1}
+.page-head .wave{z-index:2}
+.page-head .title{padding-top:calc(var(--bh)*.58)}
+.amark{margin:0 0 6px;display:grid;justify-items:start;line-height:1;color:#fff}
+.amark .ps{font:200 clamp(2.2rem,7vw,4.2rem)/1.02 var(--font-display);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.14em;text-shadow:0 3px 14px rgba(0,0,0,.85),0 0 2px #000}
+.amark .ff{font:400 clamp(2.6rem,12vw,7.4rem)/.95 var(--font-mark);background:linear-gradient(180deg,#8fe893 0%,#51bf57 42%,#1c7427 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+.page-head p{text-shadow:0 1px 8px #000}
+/* ---- lore section ---- */
+.lore-box{background:var(--panel);border:1px solid rgba(254,252,143,.38);border-left:6px solid var(--green);border-radius:15px;padding:24px;display:grid;gap:14px;font-family:var(--font-serif)}
+.lore-box p{margin:0;font-size:1.08rem;line-height:1.6}
+.lore-box .dm{font:600 clamp(1.25rem,3.6vw,1.6rem)/1.35 var(--font-serif);color:var(--yellow)}
+.cycle{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.cycle li{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:baseline;background:#000;border:1px solid #2b2b2b;border-radius:12px;padding:12px 16px}
+.cycle b{font:400 1.15rem var(--font-mark);text-transform:uppercase;letter-spacing:.03em;background:linear-gradient(180deg,#8fe893,#51bf57 55%,#2a8f35);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (max-width:520px){.cycle li{grid-template-columns:1fr;gap:2px}}
+.amark .ff{font-size:clamp(2.2rem,8.4vw,5.4rem)}
 </style>
 </head>
 <body>
@@ -202,7 +223,7 @@ html{scroll-padding-top:86px}
 <div class="page-head">
   <div class="wrap">
     <div class="title">
-      <h1>Start at <b>GROUND LEVEL</b></h1>
+      <h1 class="amark"><span class="ps">Start at</span><span class="ff">GROUND LEVEL</span></h1>
       <p>Your first stop into the Prologic network. Every path starts with the first question we ask: what are you standing on? This is where you find solid ground, learn a trade that pays you for your people skills, and build up from there.</p>
       <div class="btns"><a class="btn solid" href="#apply">Apply now</a><a class="btn ghost" href="#path">See the path</a></div>
     </div>
