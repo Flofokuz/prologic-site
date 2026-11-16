@@ -176,12 +176,13 @@ html{scroll-padding-top:86px}
   .topbar .sitenav a{white-space:nowrap}
 }
 
-/* ---- lore banner replaces the big photo ---- */
-.stage::before,.stage::after{content:none}
-.lore{position:relative;left:50%;transform:translateX(-50%);width:min(1100px,calc(100vw - 24px));margin:22px 0 0}
-.lore img{width:100%;height:auto;display:block;border-radius:8px;box-shadow:0 0 0 3px #000,0 0 0 6px var(--green),0 22px 50px rgba(81,191,87,.18)}
-.stage .hero{padding:34px 0 120px}
-.hero .seed{font:600 clamp(1.15rem,3.4vw,1.45rem)/1.35 var(--font-serif);color:var(--yellow);margin:0 0 14px;text-shadow:none}
+/* ---- lore banner behind the wordmark, like the old photo hero ---- */
+.stage{--bh:clamp(330px,56vw,1080px)}
+.stage::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--bh);background:url(/assets/banner.webp) center top/cover no-repeat}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.18) 0,rgba(0,0,0,0) calc(var(--bh)*.18),rgba(0,0,0,0) calc(var(--bh)*.5),rgba(0,0,0,.78) calc(var(--bh)*.8),#000 calc(var(--bh)*.98))}
+.stage .hero{padding:calc(var(--bh)*.56) 0 120px}
+.hero .mark .ps,.hero .mark .by{text-shadow:0 3px 14px rgba(0,0,0,.85),0 0 2px #000}
+.hero .seed{font:600 clamp(1.15rem,3.4vw,1.45rem)/1.35 var(--font-serif);color:var(--yellow);margin:0 0 14px;text-shadow:0 1px 8px rgba(0,0,0,.7)}
 .hire-box{background:var(--panel);border:2px solid var(--green);border-radius:15px;padding:24px;display:grid;gap:12px;box-shadow:0 0 0 4px rgba(81,191,87,.12)}
 .hire-box .tag{justify-self:start}
 .hire-box ol{margin:0;padding-left:1.2em;font-family:var(--font-serif)}
@@ -199,7 +200,6 @@ html{scroll-padding-top:86px}
 
 <div class="stage">
   <div class="wrap">
-    <figure class="lore" style="margin-bottom:0"><img src="/assets/banner.webp" width="1024" height="572" alt="Comic-style art of FloFokuz in a fedora, glasses, vest and wolf pendant, arms crossed and grinning up at the viewer, standing in a round hall of green doors carved with a falcon, wolf, lion, elephant, gorilla and hyena"></figure>
     <div class="hero">
       <p class="mark"><span class="ps">Prologic Strategies</span><span class="by">by</span><span class="ff">FLOFOKUZ</span></p>
       <h1>Find your floor. Choose your path. <em>Build something that outlives you.</em></h1>
@@ -223,7 +223,7 @@ html{scroll-padding-top:86px}
         <p>With over 20 years in the music industry and deep expertise in sales and leadership, I founded Prologic Strategies to inspire and equip individuals to thrive in competitive landscapes.</p>
         <p>My vision drives Team A.L.I.V.E. and the Falcon Company of Mentors and curators, uniting creators and entrepreneurs in a movement for growth and resilience.</p>
       </div>
-      <img src="/assets/portrait.jpg" alt="Prince Taylor, close up, wearing a knit cap" width="401" height="401">
+      <img src="/assets/blazer.jpg" alt="Prince Taylor up close to the camera in a red blazer, fedora and glasses" width="720" height="920">
     </div>
   </section>
 
@@ -244,12 +244,13 @@ html{scroll-padding-top:86px}
     <div class="hire-box">
       <span class="tag live">Now hiring</span>
       <h2 id="h-hire" style="margin:0">Start at Ground Level</h2>
-      <p>Entry-level, commission-based sales on our street, door-to-door and events team. No experience needed. You learn it side by side with us.</p>
+      <p>Entry-level, commission-based sales on our street, door-to-door and events team. No experience needed. You start in the field, side by side, in a spot you choose.</p>
       <ol>
         <li>Apply with your resume</li>
-        <li>Interview in person in Times Square</li>
-        <li>Shadow day, then a wrap-up and core trajectory session</li>
-        <li>One to two weeks of daily side-by-side sales while you onboard</li>
+        <li>Shadow day with Prince, in his area or a spot you pick</li>
+        <li>Wrap-up and core trajectory session</li>
+        <li>One to two weeks of daily side-by-side sales</li>
+        <li>Then the office meeting in Times Square</li>
       </ol>
       <div class="btns"><a class="btn solid" href="/GroundLevel/">Apply at Ground Level</a></div>
     </div>
