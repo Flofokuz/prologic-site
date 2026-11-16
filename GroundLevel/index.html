@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ground Level: join the team · Prologic Strategies</title>
+<meta name="description" content="Start at Ground Level. Entry-level, commission-based street, door-to-door and events sales with Prologic Strategies. Apply with your resume and book an in-person interview in Times Square.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Oswald:wght@200;300;400;500&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one centered column; hero line, then what's live, what's coming, the five questions, and contact. Prologic suite palette: ink, gold, ember. */
+  --ink:#121417;
+  --panel:#1b1e23;
+  --line:#2c3038;
+  --text:#ece8df;
+  --muted:#a9a59c;
+  --gold:#d9a441;
+  --ember:#d4572a;
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ink);color:var(--text);font:17px/1.6 var(--font-body)}
+a{color:var(--gold)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-weight:700;letter-spacing:.06em;font-size:1.05rem}
+.brand span{color:var(--gold)}
+.top small{color:var(--muted)}
+.hero{padding:64px 0 44px}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.1rem,6vw,3.4rem);line-height:1.08;margin:0 0 18px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{max-width:60ch;color:var(--muted);margin:0 0 26px;font-size:1.1rem}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--gold)}
+.btn.solid{background:var(--gold);color:var(--ink)}
+.btn.ghost{color:var(--gold)}
+section{padding:36px 0;border-top:1px solid var(--line)}
+h2{font-family:var(--font-display);font-size:1.7rem;margin:0 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 20px;max-width:62ch}
+.next{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--ember);border-radius:12px;padding:16px 18px;display:grid;gap:4px}
+.next b{font-variant-numeric:tabular-nums}
+.next .when{color:var(--ember);font-weight:600;font-size:.9rem;letter-spacing:.04em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:8px;align-content:start}
+.card h3{margin:0;font-size:1.1rem}
+.card p{margin:0;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;justify-self:start}
+.tag.live{background:rgba(217,164,65,.15);color:var(--gold)}
+.tag.soon{background:rgba(212,87,42,.14);color:var(--ember)}
+.realms{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.realms li{display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.realms b{font-family:var(--font-display);color:var(--gold);font-size:1.15rem}
+.realms span{color:var(--text)}
+.contact{display:grid;gap:12px;max-width:520px}
+.contact .row{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.contact .row small{display:block;color:var(--muted);font-size:.85rem}
+.contact .row a,.contact .row strong{font-size:1.1rem;font-weight:600;font-variant-numeric:tabular-nums}
+.pf{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:20px;display:grid;gap:14px}
+.pf .quote{font-family:var(--font-display);font-size:1.25rem;line-height:1.35;margin:0;color:var(--text)}
+.pf ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.pf ul li::marker{color:var(--gold)}
+.pf small{color:var(--muted)}
+.social{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.social a{display:inline-block;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);text-decoration:none;font-weight:500}
+.social a:hover{border-color:var(--gold);color:var(--gold)}
+footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+@media (max-width:520px){ .realms li{grid-template-columns:1fr;gap:2px} }
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+/* ---- old-site skin: black, green, yellow; thin Oswald, Playfair, heavy wordmark ---- */
+:root{--ink:#000;--panel:#0e0e0e;--line:#2b2b2b;--text:#fff;--muted:#d2d2d2;--gold:#fefc8f;--ember:#51bf57;--green:#51bf57;--yellow:#fefc8f;
+  --font-display:"Oswald","Arial Narrow",Impact,sans-serif;--font-serif:"Playfair Display",Georgia,serif;--font-body:"Helvetica Neue",Helvetica,Arial,sans-serif;--font-mark:"Archivo Black","Arial Black",Impact,sans-serif}
+.stage{position:relative;overflow:hidden}
+.stage{background:#000}
+.stage::before{content:"";position:absolute;left:0;right:0;top:0;height:76%;background:url(/assets/hero.jpg) center top/cover no-repeat}
+.stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.05) 20%,rgba(0,0,0,.22) 44%,rgba(0,0,0,.86) 67%,#000 76.5%)}
+.stage>.wrap{position:relative;z-index:1}
+header.top{border-bottom:0;padding:18px 0}
+.brand{font-family:var(--font-display);font-weight:300;font-size:1.15rem;letter-spacing:.14em}
+.brand span{color:var(--yellow)}
+.top small{color:#fff;font-family:var(--font-serif)}
+.hero{padding:clamp(240px,46vh,430px) 0 120px}
+.hero .mark{margin:0 0 22px;display:grid;justify-items:start;line-height:1;color:#fff;max-width:none;text-shadow:none}
+.mark .ps{font:200 clamp(2.5rem,9.5vw,5.6rem)/1.02 var(--font-display);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.14em;text-shadow:0 3px 14px rgba(0,0,0,.55)}
+.mark .by{font:200 clamp(1.6rem,5vw,3rem)/1.25 var(--font-display);padding-left:.12em}
+.mark .ff{font:400 clamp(2.6rem,13.2vw,7.9rem)/.95 var(--font-mark);letter-spacing:.01em;text-shadow:none;background:linear-gradient(180deg,#8fe893 0%,#51bf57 42%,#1c7427 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+.hero h1{font:300 clamp(1.5rem,4.2vw,2.3rem)/1.2 var(--font-display);letter-spacing:.01em;margin:0 0 14px;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.hero h1 em{color:var(--yellow)}
+.hero p{font-family:var(--font-serif);color:#fff;font-size:1.08rem;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.btn{font-family:var(--font-serif);font-weight:600;border:3px double var(--yellow);border-radius:10px;padding:11px 20px;transition:transform .15s ease,box-shadow .15s ease}
+.btn.solid{background:var(--yellow);color:#000;border-color:#000;box-shadow:0 0 0 2px var(--yellow)}
+.btn.ghost{background:rgba(0,0,0,.72);color:var(--yellow)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(81,191,87,.55)}
+.btn.solid:hover{box-shadow:0 0 0 2px var(--yellow),0 8px 0 rgba(81,191,87,.55)}
+.wave{position:absolute;z-index:1;left:0;bottom:-1px;width:200%;height:clamp(60px,10vw,110px);display:block}
+.wave .w1{fill:var(--green)}.wave .w2{fill:#000}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.wave{animation:drift 26s linear infinite}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.mark .ps{animation:rise .7s ease both}.mark .by{animation:rise .7s .12s ease both}.mark .ff{animation:rise .8s .24s ease both}
+section{border-top:0;padding:46px 0}
+h2{font:200 clamp(2.3rem,7.5vw,3.7rem)/1.05 var(--font-display);color:var(--green);text-shadow:0 4px 0 rgba(255,255,255,.07);margin:0 0 10px}
+.lead{font-family:var(--font-serif);color:#fff}
+.card{background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;transition:transform .15s ease,border-color .15s ease}
+.card:hover{transform:translateY(-3px);border-color:var(--yellow)}
+.card h3{font:400 1.45rem/1.15 var(--font-display);letter-spacing:.01em}
+.card a{font-family:var(--font-serif);font-weight:600}
+.tag.live{background:rgba(81,191,87,.18);color:#7be07f}.tag.soon{background:rgba(254,252,143,.14);color:var(--yellow)}
+.next{border-radius:15px;border-color:rgba(254,252,143,.38);border-left:6px solid var(--green)}
+.next .when{color:#7be07f}
+.pf{border-radius:15px;border-color:rgba(254,252,143,.38);border-left:6px solid var(--yellow)}
+.pf .quote{font-family:var(--font-serif)}
+.meet{display:grid;grid-template-columns:1fr minmax(160px,260px);gap:26px;align-items:center;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:26px;margin-top:8px}
+.meet h2{color:#fff;font-size:clamp(2rem,6vw,3.1rem)}
+.meet .role{font:300 1.15rem var(--font-display);margin:0 0 14px;color:var(--yellow)}
+.meet .say{font:600 1.25rem/1.4 var(--font-serif);margin:0 0 10px}
+.meet p{font-family:var(--font-serif);margin:0 0 10px}
+.meet img{width:100%;height:100%;max-height:440px;object-fit:cover;object-position:center 30%;border-radius:12px;border:3px double var(--yellow);display:block}
+@media (max-width:640px){.meet{grid-template-columns:1fr}.meet img{max-height:340px;order:-1}}
+section[aria-labelledby="h-realms"]{background:var(--green);color:#000;box-shadow:0 0 0 100vmax var(--green);clip-path:inset(0 -100vmax);margin:26px 0}
+section[aria-labelledby="h-realms"] h2{color:#000;text-shadow:none;font-weight:300}
+section[aria-labelledby="h-realms"] .lead{color:#000}
+.realms li{background:#000;border-color:#000;border-radius:12px;grid-template-columns:120px 1fr}
+.realms b{font:400 1.2rem var(--font-mark);text-transform:uppercase;letter-spacing:.03em;background:linear-gradient(180deg,#8fe893,#51bf57 55%,#2a8f35);-webkit-background-clip:text;background-clip:text;color:transparent}
+.social a{border-color:rgba(254,252,143,.38);font-family:var(--font-serif)}
+.social a:hover{background:var(--yellow);color:#000;border-color:var(--yellow)}
+footer{border-top:0;font-family:var(--font-serif)}
+@media (prefers-reduced-motion: reduce){.wave,.mark span{animation:none!important}}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:6px 18px;font:300 1.05rem var(--font-display);letter-spacing:.06em}
+.sitenav a{color:#fff;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.sitenav a:hover,.sitenav a[aria-current]{border-bottom-color:var(--yellow);color:var(--yellow)}
+.last{margin-top:14px;font-family:var(--font-serif)}
+.page-head{position:relative;background:#000;overflow:hidden;padding-bottom:clamp(70px,11vw,120px)}
+.page-head .title{padding:34px 0 10px;display:grid;gap:10px}
+.page-head h1{font:200 clamp(2.6rem,9vw,5rem)/1.02 var(--font-display);margin:0;color:#fff}
+.page-head h1 b{font:400 1em var(--font-mark);background:linear-gradient(180deg,#8fe893,#51bf57 45%,#1c7427);-webkit-background-clip:text;background-clip:text;color:transparent;display:block;line-height:1}
+.page-head p{font:1.15rem/1.5 var(--font-serif);margin:0;max-width:56ch}
+.split{display:grid;grid-template-columns:1fr minmax(150px,240px);gap:24px;align-items:center}
+.split img{width:100%;height:auto;display:block}
+@media (max-width:640px){.split{grid-template-columns:1fr}.split img{max-width:220px}}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:14px 18px;font-family:var(--font-serif)}
+.steps li::before{content:"0" counter(s);font:200 2.6rem/1 var(--font-display);color:var(--green)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.big{font:200 clamp(1.8rem,6vw,2.8rem)/1.1 var(--font-display);color:var(--yellow);margin:0}
+.quote2{font:600 clamp(1.3rem,4vw,1.8rem)/1.35 var(--font-serif);margin:0;border-left:6px solid var(--green);padding-left:18px}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.photos img{width:100%;height:320px;object-fit:cover;border-radius:12px;border:3px double var(--yellow);display:block}
+
+.gl-form{display:grid;gap:14px;background:var(--panel);border:1px solid rgba(254,252,143,.38);border-radius:15px;padding:22px}
+.gl-form label{display:grid;gap:6px;font:400 1.02rem var(--font-display);letter-spacing:.02em}
+.gl-form input[type=text],.gl-form input[type=tel],.gl-form input[type=email],.gl-form select,.gl-form textarea{font:1rem/1.4 var(--font-body);color:#fff;background:#000;border:1px solid #555;border-radius:10px;padding:11px 12px;width:100%}
+.gl-form input[type=file]{font:0.98rem var(--font-body);color:#ddd}
+.gl-form textarea{min-height:110px;resize:vertical}
+.gl-form .check{display:flex;gap:10px;align-items:flex-start;font:1rem/1.45 var(--font-serif);letter-spacing:0}
+.gl-form .check input{margin-top:4px;width:18px;height:18px;accent-color:var(--green)}
+.gl-form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.gl-form .row{grid-template-columns:1fr}}
+.gl-form small,.fine{font:0.95rem/1.5 var(--font-serif);color:#cfcfcf}
+.gl-form button{cursor:pointer;font-size:1.05rem;justify-self:start}
+.hp{position:absolute;left:-9999px}
+.where{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.where .card p{margin:6px 0 0;font-family:var(--font-serif)}
+#thanks{display:none}#thanks:target{display:block}
+.thanks-box{border:2px solid var(--green);border-radius:15px;padding:20px;background:var(--panel);font-family:var(--font-serif)}
+
+/* ---- sticky top bar (follows the visitor as they scroll) ---- */
+html{scroll-padding-top:86px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(0,0,0,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:2px solid var(--green)}
+.topbar header.top{padding:10px 0;border-bottom:0;flex-wrap:nowrap}
+.topbar .brand{white-space:nowrap}
+.topbar .brand a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:9px}
+.topbar .brand img{width:30px;height:30px;border-radius:50%;display:block}
+.topbar .brand .bt{color:#fff}
+.topbar .brand .bt span{color:var(--yellow)}
+.sitenav a.hire{color:var(--green)}
+@media (max-width:760px){
+  .topbar header.top{flex-wrap:wrap;gap:0 12px;padding:8px 0 4px}
+  .topbar .sitenav{flex-wrap:nowrap;overflow-x:auto;width:100%;gap:14px;font-size:.98rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .topbar .sitenav::-webkit-scrollbar{display:none}
+  .topbar .sitenav a{white-space:nowrap}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+    <header class="top">
+      <div class="brand"><a href="/"><img src="/assets/falcon-64.png" alt="" width="30" height="30"><span class="bt">PROLOGIC <span>STRATEGIES</span></span></a></div>
+      <nav class="sitenav" aria-label="Site"><a href="/">Home</a><a href="/show/">The show</a><a href="/about/">About</a><a href="/#tools">Free tools</a><a href="/GroundLevel/" class="hire" aria-current="page">Join the team</a><a href="/#pullup">Pull up</a></nav>
+    </header>
+</div></div>
+<div class="page-head">
+  <div class="wrap">
+    <div class="title">
+      <h1>Start at <b>GROUND LEVEL</b></h1>
+      <p>Your first stop into the Prologic network. Every path starts with the first question we ask: what are you standing on? This is where you find solid ground, learn a trade that pays you for your people skills, and build up from there.</p>
+      <div class="btns"><a class="btn solid" href="#apply">Apply now</a><a class="btn ghost" href="#path">See the path</a></div>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 2400 110" preserveAspectRatio="none" aria-hidden="true"><path class="w1" d="M0 46 Q150 0 300 46 T600 46 T900 46 T1200 46 T1500 46 T1800 46 T2100 46 T2400 46 V110 H0Z"/><path class="w2" d="M0 76 Q150 34 300 76 T600 76 T900 76 T1200 76 T1500 76 T1800 76 T2100 76 T2400 76 V110 H0Z"/></svg>
+</div>
+<div class="wrap">
+  <section id="thanks" aria-live="polite">
+    <div class="thanks-box"><b>Got it. Your application is in.</b> We'll reach out by text or email to set up your interview. Want to lock in a time now? <a href="https://cal.com/flo-fokuz-yriw4c/street-team">Book your interview</a>.</div>
+  </section>
+
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">The work</h2>
+    <p class="lead">Entry-level, commission-based sales on our street, door-to-door and events team. We help households lower their home internet and phone bills, and you learn how to talk to people, find what they need and close.</p>
+    <div class="two" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+      <div class="card"><h3>No experience needed</h3><p>If you can hold a real conversation and show up on time, we can teach the rest. Confidence gets built on the job.</p></div>
+      <div class="card"><h3>Commission-based pay</h3><p>You earn on what you close. We walk you through exactly how pay works in your interview, before you commit to anything.</p></div>
+      <div class="card"><h3>Learn side by side</h3><p>Nobody gets thrown to the wolves. You watch first, then work next to someone who does this every day.</p></div>
+      <div class="card"><h3>A way into the network</h3><p>Ground Level is the front door to Prologic: mentors, free tools, the show, and programs for building your own thing.</p></div>
+    </div>
+  </section>
+
+  <section id="path" aria-labelledby="h-path">
+    <h2 id="h-path">The path</h2>
+    <ol class="steps">
+      <li><span><b>Apply.</b> Send your resume below, or just tell us about yourself if you don't have one yet.</span></li>
+      <li><span><b>Interview.</b> In person at our Times Square office.</span></li>
+      <li><span><b>Shadow day.</b> Come out with the team and watch how the work really goes.</span></li>
+      <li><span><b>Wrap-up and core trajectory session.</b> We talk through what you saw and map out where you want this to take you.</span></li>
+      <li><span><b>Side by side.</b> One to two weeks of daily sales next to a teammate while you onboard.</span></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="h-where">
+    <h2 id="h-where">Where and when</h2>
+    <div class="where">
+      <div class="card"><h3>Times Square office</h3><p>Manhattan. The exact address comes with your interview confirmation.</p></div>
+      <div class="card"><h3>Wednesdays and Thursdays</h3><p>In-person interviews, for now. If the days change, we'll give you plenty of notice.</p></div>
+    </div>
+    <div class="btns" style="margin-top:16px"><a class="btn ghost" href="https://cal.com/flo-fokuz-yriw4c/street-team">Book an interview time</a></div>
+  </section>
+
+  <section id="apply" aria-labelledby="h-apply">
+    <h2 id="h-apply">Apply</h2>
+    <p class="lead">Takes about two minutes. We read every one.</p>
+    <form class="gl-form" action="https://formsubmit.co/prologicstrategies@gmail.com" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_subject" value="New Ground Level application">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://prologicstrategies.com/GroundLevel/#thanks">
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="row">
+        <label>Your name<input type="text" name="Name" autocomplete="name" required></label>
+        <label>Phone<input type="tel" name="Phone" autocomplete="tel" inputmode="tel" required></label>
+      </div>
+      <div class="row">
+        <label>Email<input type="email" name="Email" autocomplete="email" required></label>
+        <label>Neighborhood or borough<input type="text" name="Area" placeholder="e.g. South Bronx"></label>
+      </div>
+      <div class="row">
+        <label>Best interview day
+          <select name="Interview day"><option value="Either">Either day</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option></select>
+        </label>
+        <label>How did you hear about us?<input type="text" name="Heard from" placeholder="The show, a friend, Instagram..."></label>
+      </div>
+      <label>Resume (PDF, Word or a photo of it)<input type="file" name="attachment" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"></label>
+      <label>Tell us about you<textarea name="About me" placeholder="No resume yet? No problem. Tell us about any work, hustle or people skills you've got."></textarea></label>
+      <label class="check"><input type="checkbox" name="OK to contact" value="Yes" required>It's OK to contact me by phone, text or email about this role.</label>
+      <button class="btn solid" type="submit">Send my application</button>
+      <small>Your info goes only to Prologic Strategies for hiring. We don't sell it or share it.</small>
+    </form>
+  </section>
+
+  <section aria-labelledby="h-who">
+    <h2 id="h-who">Who you're working with</h2>
+    <p class="fine" id="h-who-p">Prologic Strategies runs an independent sales team for a major national carrier. We're not the carrier, and this isn't a job with the carrier itself. Questions first? Email <a href="mailto:prologicstrategies@gmail.com?subject=Ground%20Level">prologicstrategies@gmail.com</a>.</p>
+  </section>
+
+  <footer>&copy; 2026 Prologic Strategies LLC &middot; Bronx, New York &middot; <a href="mailto:prologicstrategies@gmail.com">prologicstrategies@gmail.com</a></footer>
+</div>
+</body>
+</html>
