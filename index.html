@@ -411,7 +411,7 @@ html{scroll-padding-top:86px}
     <div class="contact">
       <div class="row">
         <small>Email</small>
-        <a href="mailto:prologicstrategies@gmail.com?subject=Keep%20me%20in%20the%20loop">prologicstrategies@gmail.com</a>
+        <a class="em-link" href="/#pullup" data-u="prologicstrategies" data-d="gmail.com" data-q="?subject=Keep%20me%20in%20the%20loop">email us</a>
       </div>
       <div class="row">
         <small>Call or text</small>
@@ -452,11 +452,12 @@ html{scroll-padding-top:86px}
 </div>
 <h2 id="h-pullup">Pull up. Sound off.</h2>
 <p class="lead">Share your story, your project, or what you need. It takes about a minute.</p>
-<form id="pu-form" class="pu-form" action="https://formsubmit.co/prologicstrategies@gmail.com" method="POST">
+<form id="pu-form" class="pu-form" action="https://formsubmit.co/3b9d9b3f7d2fcb9dd865025c5daf24c0" method="POST">
 <input type="hidden" name="_subject" value="New sound-off from prologicstrategies.com">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_next" value="https://prologicstrategies.com/#thanks">
 <input type="text" name="_honey" class="pu-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="_blacklist" value="web development services, SEO services, backlinks, rank your website, crypto investment, casino, viagra">
 <label>Your name<input type="text" name="Name" required autocomplete="name"></label>
 <fieldset class="pu-contact">
 <legend>How should we reach you? Pick at least one.</legend>
@@ -522,5 +523,6 @@ sync();
 <!-- END PULL UP FORM -->
   <footer>© 2026 Prologic Strategies LLC · Bronx, NY</footer>
 </div>
+<script>/*emFix*/document.querySelectorAll('a.em-link').forEach(function(a){var e=a.dataset.u+'@'+a.dataset.d;a.href='mailto:'+e+(a.dataset.q||'');if(!a.dataset.keep)a.textContent=e;});</script>
 </body>
 </html>
