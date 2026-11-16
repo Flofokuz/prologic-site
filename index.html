@@ -170,11 +170,15 @@ html{scroll-padding-top:86px}
 .topbar .brand .bt span{color:var(--yellow)}
 .sitenav a.hire{color:var(--green)}
 .sitenav a.qlink{color:#e8c77a}
+@media (max-width:1100px){
+  .topbar header.top{flex-wrap:wrap;gap:2px 14px}
+  .topbar .sitenav{gap:4px 14px;font-size:.98rem}
+}
 @media (max-width:760px){
-  .topbar header.top{flex-wrap:wrap;gap:0 12px;padding:8px 0 4px}
-  .topbar .sitenav{flex-wrap:nowrap;overflow-x:auto;width:100%;gap:14px;font-size:.98rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .topbar .sitenav::-webkit-scrollbar{display:none}
-  .topbar .sitenav a{white-space:nowrap}
+  .topbar header.top{padding:8px 0 6px}
+  .topbar .sitenav{width:100%;flex-wrap:wrap;justify-content:space-between;gap:2px 8px;font-size:clamp(.74rem,3.3vw,.98rem);letter-spacing:.02em}
+  .topbar .sitenav a{white-space:nowrap;padding:3px 0}
+  html{scroll-padding-top:110px}
 }
 
 /* ---- lore banner behind the wordmark, like the old photo hero ---- */
