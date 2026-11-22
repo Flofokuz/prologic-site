@@ -198,7 +198,7 @@ html{scroll-padding-top:86px}
 
 /* ---- Ground Level corner banner behind the title ---- */
 .page-head{--bh:clamp(330px,56vw,1080px)}
-.page-head::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--bh);background:url(/assets/gl-banner.webp) center top/cover no-repeat}
+.page-head::before{content:"";position:absolute;left:0;right:0;top:0;height:var(--bh);background:radial-gradient(120% 90% at 50% 0%,#1c7427 0%,#0b2a10 45%,#000 100%)}
 .page-head::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.15) 0,rgba(0,0,0,0) calc(var(--bh)*.18),rgba(0,0,0,0) calc(var(--bh)*.5),rgba(0,0,0,.82) calc(var(--bh)*.8),#000 calc(var(--bh)*.98))}
 .page-head>.wrap{position:relative;z-index:1}
 .page-head .wave{z-index:2}
