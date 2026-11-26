@@ -1,0 +1,13 @@
+/* Extended Team pages: small additions on top of /assets/site.css */
+.etan-kicker{margin:0;font:300 1rem var(--font-display);letter-spacing:.06em}
+.etan-kicker a{color:var(--yellow);text-decoration:none}
+.etan-alias{margin:0;font:300 1.2rem var(--font-display);color:var(--green);letter-spacing:.04em}
+.etan-one{grid-template-columns:minmax(0,640px)}
+.quest h2.lore{font-size:clamp(1.4rem,3.6vw,1.8rem)}
+.etan-offers{margin:0;padding-left:20px;display:grid;gap:6px;font-size:1.02rem}
+.etan-offers li::marker{color:#7a1c12}
+.btn.is-off{opacity:.55;cursor:default}
+.btn.is-off:hover{transform:none}
+.quest .btn.is-off{background:#7a1c12;color:#f7e6c0;border:2px solid #4d0f09}
+.etan-draft{margin:22px 0 0;padding:12px 16px;border:1px dashed rgba(254,252,143,.5);border-radius:10px;font:.98rem/1.5 var(--font-serif);color:var(--muted)}
+.etan-keep{margin:40px 0 8px;text-align:center;font:300 clamp(1.5rem,4.6vw,2.2rem)/1.2 var(--font-display);color:var(--yellow);letter-spacing:.02em}
