@@ -223,6 +223,17 @@ html{scroll-padding-top:86px}
 .socials .sc:hover .ic{transform:translateY(-3px) scale(1.06)}
 .socials .sc:hover .nm{color:var(--yellow)}
 </style>
+<style>
+.chal{margin-top:34px;background:var(--panel,#111a1c);border:1px solid var(--line,rgba(231,185,100,.3));border-radius:12px;padding:20px 22px;display:grid;gap:12px}
+.chal p{margin:0}.chal form{display:grid;gap:12px}
+.chal label{display:grid;gap:6px;font-weight:600}
+.chal input,.chal textarea{font:inherit;font-weight:400;padding:10px 12px;border-radius:8px;border:1px solid #3a4a4d;background:#0b1214;color:inherit;width:100%;box-sizing:border-box}
+.chal textarea{min-height:70px;resize:vertical}
+.chal .hp{position:absolute;left:-9999px}
+.chal label.check{display:flex;gap:10px;align-items:flex-start;font-weight:400}.chal label.check input{width:auto;margin-top:4px}
+.chal .fine{font-size:.9rem;opacity:.8}
+#thanks:target{display:block}#thanks{display:none;padding:12px 16px;border-radius:10px;border:1px solid var(--line,rgba(231,185,100,.3))}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="wrap">
@@ -249,6 +260,26 @@ html{scroll-padding-top:86px}
         <li><b>Fri, Nov 27 &middot; 6pm</b><span><strong>Xtra Hype Connection: Giving Credit Where Credit Is Due.</strong> Reality-testing, the &ldquo;credit thieves,&rdquo; and auditing your support, plus a live giveaway for two NJPAC Comedy Expos&eacute; tickets.</span><a href="/xtrahype/">Details</a></li>
         <li><b>Every Mon &amp; Fri</b><span><strong>The show runs twice a week</strong>, except the last Monday of the month.</span><a href="https://cal.com/flo-fokuz-yriw4c/xtra-hype-live" target="_blank" rel="noopener">Save a seat</a></li>
       </ul>
+    </div>
+    <div class="chal" id="challenge">
+      <h2 class="crier-h">Tonight's Listener Challenge</h2>
+      <p id="thanks"><b>Got it, thank you!</b> Your answer is in. We may read some on the next show (first names only).</p>
+      <p>From <b>Giving Credit Where Credit Is Due</b> (Fri, Nov 27): name one person, resource or habit you haven't given enough credit to lately, and one excuse or clich&eacute; you're retiring. Feedback on the show is welcome too.</p>
+      <form action="https://formsubmit.co/3b9d9b3f7d2fcb9dd865025c5daf24c0" method="POST">
+        <input type="hidden" name="_subject" value="Xtra-Hype Listener Challenge / Feedback (prologicstrategies.com/challenge)">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://prologicstrategies.com/quests/#thanks">
+        <input type="hidden" name="Episode" value="Fri Nov 27, 2026: Giving Credit Where Credit Is Due">
+        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="_blacklist" value="web development services, SEO services, backlinks, rank your website, crypto investment, casino, viagra">
+        <label>First name or handle (optional)<input name="Name" autocomplete="given-name"></label>
+        <label>Who or what deserves more credit from you?<textarea name="Giving_credit_to"></textarea></label>
+        <label>The excuse or clich&eacute; you're retiring<textarea name="Retiring"></textarea></label>
+        <label>Feedback on the show (optional)<textarea name="Feedback"></textarea></label>
+        <label class="check"><input type="checkbox" name="OK_to_read_on_air" value="Yes" style="width:auto"> <span>It's OK to read my answer on the show, first name only.</span></label>
+        <div class="btns"><button class="btn solid" type="submit">Send it in</button></div>
+        <p class="fine">Rather text? Send it to the show line: (520) 525-8633. Answers go only to the hosts.</p>
+      </form>
     </div>
     <h2 class="crier-h" style="margin-top:34px">Open quests</h2>
     <div class="board">
